@@ -59,23 +59,22 @@ export default {
     ChangePic,
     CourseInfo
   },
-  // beforeRouteEnter: (to, from, next) => {
-  //   console.log('准备进入个人信息页')
-  //   let islogin = sessionStorage.getItem('isLogin')
-  //   if (!islogin) {
-  //     next({path: '/login'})
-  //   }
-  //   next()
-  // },
   data () {
     return {
       user: {
-        userPic: 'static/userPic/userPic.jpg',
-        username: '游客'
+        userPic: '',
+        username: ''
       },
       componentNext: 'SpaceInfo',
       activeMenu: '1-1'
     }
+  },
+  mounted () {
+    this.username = sessionStorage.getItem('username')
+    this.getAvatarUrl()
+  },
+  updated () {
+    this.username = sessionStorage.getItem('username')
   },
   methods: {
     toSpaceInfo: function () {
@@ -92,6 +91,38 @@ export default {
     },
     handleSelect (index) {
       this.activeMenu = index
+    },
+    getAvatarUrl: function () {
+      this.$axios.post('http://localhost:8080/api/lookUserInfo', {
+        'id': sessionStorage.getItem('userId')
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.user.userPic = resp.data.user.avatarUrl
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取个人信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取个人信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
     }
     // 关闭
   }

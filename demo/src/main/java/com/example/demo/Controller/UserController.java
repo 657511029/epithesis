@@ -47,4 +47,12 @@ public class UserController {
         response.put("user",user);
         return ResponseEntity.ok(response);
     }
+    @RequestMapping(value = "/api/lookUserInfo",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookUserInfo(@RequestBody Map<String,Object> map) {
+        logger.debug("modifyUserInfo: " + map.toString());
+        User user = userService.lookUserInfo(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("user",user);
+        return ResponseEntity.ok(response);
+    }
 }

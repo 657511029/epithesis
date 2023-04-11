@@ -60,6 +60,7 @@ export default {
                 sessionStorage.setItem('isLogin', '1')
                 sessionStorage.setItem('username', resp.data.user.username)
                 sessionStorage.setItem('userId', resp.data.user.id)
+                console.log(typeof sessionStorage.getItem('userId'))
                 this.$router.push('/')
               } else {
                 // 注册出现错误

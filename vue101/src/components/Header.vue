@@ -95,7 +95,7 @@ export default {
   display: flex;
   padding: 0;
   height: 50px;
-  min-width: 1300px;
+  min-width: 1350px;
   position:relative;
 }
 .header-logo{
