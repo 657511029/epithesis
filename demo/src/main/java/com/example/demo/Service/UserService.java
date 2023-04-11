@@ -6,12 +6,19 @@ import com.example.demo.Exception.CannotBeenFoundException;
 import com.example.demo.Exception.HasBeenFoundException;
 
 import com.example.demo.Exception.IncorrectException;
+import com.example.demo.Exception.OperationFailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -72,7 +79,6 @@ public class UserService {
         String sex = (String)map.get("sex");
         String address = (String)map.get("address");
         String interest = (String)map.get("interest");
-        String avatarUrl = (String)map.get("avatarUrl");
         List<User> userEntity = userDao.findAllByEmail(email);
         List<User> userEntity1 = userDao.findAllByUsername(username);
         if (userEntity.size() > 1) {
@@ -93,7 +99,6 @@ public class UserService {
             user.setSex(sex);
             user.setAddress(address);
             user.setInterest(interest);
-            user.setAvatarUrl(avatarUrl);
             userDao.save(user);
             return user;
         }
@@ -112,4 +117,52 @@ public class UserService {
             throw new CannotBeenFoundException("user");
         }
     }
+    public User modifyUserAvatar(MultipartFile file,String idStr) throws Exception {
+
+        Long id = Long.parseLong(idStr);
+        String ware_name = file.getOriginalFilename();
+        String filename = UUID.randomUUID() + ware_name;
+        String address = "D:/Epithesis/epithesis/vue101/static/userPic/";
+        String address1 = "static/userPic/";
+        File filex = new File(address);
+        if (!(filex.exists() && filex.isDirectory())) {//若上传目录不存在，则创建目录
+            filex.mkdirs();
+        }
+        String message = "";
+        InputStream is = null;
+        FileOutputStream fos = null;
+        byte[] buffer = new byte[100 * 1024];//根据上传文件大小设定
+        try {
+            is = file.getInputStream();// 获得上传文件流
+            //创建文件输出流  使用FileOutputStream打开服务器端的上传文件
+            fos = new FileOutputStream(address + filename);
+            int len = 0;
+            //开始读取上传文件的字节，并将其输出到服务端的上传文件输出流中
+            //循环将输入流读入到缓冲区当中，(len=in.read(buffer))>0就表示in里面还有数据
+            while ((len = is.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);//写入到指定的目录当中
+            }
+            fos.flush();
+            is.close();
+            fos.close();
+            message = "上传成功！" + "<br>";
+            message += "上传内容：" + filename + "<br>";
+            System.out.println("上传内容：" + filename + "<br>");
+        } catch (IOException e) {
+            message = "文件上传失败！";
+            throw new OperationFailException(message);
+        }
+        Optional<User> userOptional = userDao.findById(id);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setAvatarUrl(address1 +filename);
+            userDao.save(user);
+            System.out.println(address + filename);
+            return user;
+        }
+        else {
+            throw new CannotBeenFoundException("user");
+        }
+    }
+
 }

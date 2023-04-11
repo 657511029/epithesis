@@ -160,7 +160,6 @@ export default {
         if (valid) {
           this.$axios.post('http://localhost:8080/api/modifyUserInfo', {
             'id': this.form.id,
-            'avatarUrl': this.form.avatarUrl,
             'username': this.form.username,
             'age': this.form.age,
             'sex': this.sex,
@@ -175,6 +174,7 @@ export default {
                 console.log(resp)
                 this.dialogVisible = false
                 this.$emit('flesh')
+                window.location.reload()
               } else {
                 let message = resp.data.message
                 this.$message({
@@ -200,7 +200,6 @@ export default {
             })
         }
       })
-      window.location.reload()
     },
     handleClose () {
       this.dialogVisible = false

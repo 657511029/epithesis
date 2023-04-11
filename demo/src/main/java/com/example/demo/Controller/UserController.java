@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +49,15 @@ public class UserController {
     public ResponseEntity<?> lookUserInfo(@RequestBody Map<String,Object> map) {
         logger.debug("modifyUserInfo: " + map.toString());
         User user = userService.lookUserInfo(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("user",user);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/modifyUserAvatar",method = {RequestMethod.POST})
+    public ResponseEntity<?> modifyUserAvatar(@RequestParam("avatarFile")MultipartFile file,
+                                              @RequestParam("id") String idStr ) throws Exception {
+        logger.debug("modifyUserAvatar:");
+        User user = userService.modifyUserAvatar(file,idStr);
         Map<String,Object> response = new HashMap<>();
         response.put("user",user);
         return ResponseEntity.ok(response);
