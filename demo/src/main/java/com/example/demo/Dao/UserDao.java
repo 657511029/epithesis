@@ -13,11 +13,8 @@ public interface UserDao extends CrudRepository<User,Long> {
 
     public List<User> findAllByEmail(String email);
 
-    public List<User> findAllByPhoneNumber(String phoneNumber);
-
     public List<User> findAllByUsername(String username);
     public User findByUsername(String username);
     public Optional<User> findById(Long id);
 
-    public User findByPhoneNumber(String phoneNumber);
 }

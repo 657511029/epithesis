@@ -21,7 +21,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     ResponseEntity<?> handleCannotBeenFoundException(CannotBeenFoundException ex) {
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
 
@@ -29,12 +29,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     ResponseEntity<?> handleIncorrectException(IncorrectException ex) {
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(OperationFailException.class)
     ResponseEntity<?> handleOperationFailException(OperationFailException ex) {
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.EXPECTATION_FAILED);
     }
 }
