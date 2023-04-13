@@ -183,53 +183,83 @@ export default {
         })
     },
     getTeacherList: function () {
-      this.teacherList = [
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客1',
-          userId: 1
-        },
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客2',
-          userId: 2
-        },
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客3',
-          userId: 3
-        },
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客4',
-          userId: 4
-        },
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客5',
-          userId: 5
-        },
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客6',
-          userId: 6
-        },
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客7',
-          userId: 7
-        },
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客8',
-          userId: 8
-        },
-        {
-          userPic: 'static/userPic/userPic.jpg',
-          username: '游客9',
-          userId: 9
-        }
-      ]
+      // this.teacherList = [
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客1',
+      //     userId: 1
+      //   },
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客2',
+      //     userId: 2
+      //   },
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客3',
+      //     userId: 3
+      //   },
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客4',
+      //     userId: 4
+      //   },
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客5',
+      //     userId: 5
+      //   },
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客6',
+      //     userId: 6
+      //   },
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客7',
+      //     userId: 7
+      //   },
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客8',
+      //     userId: 8
+      //   },
+      //   {
+      //     userPic: 'static/userPic/userPic.jpg',
+      //     username: '游客9',
+      //     userId: 9
+      //   }
+      // ]
+      this.$axios.post('http://localhost:8080/api/lookTeacherOfCourse', {
+        'courseId': this.courseId
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.teacherList = resp.data.teacherList
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取教学团队信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取教学团队信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
     }
   }
 }

@@ -15,6 +15,7 @@ public class CourseTeacher {
 
     private String userId;
 
+
     public Long getId() {
         return id;
     }
@@ -38,4 +39,6 @@ public class CourseTeacher {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+
 }

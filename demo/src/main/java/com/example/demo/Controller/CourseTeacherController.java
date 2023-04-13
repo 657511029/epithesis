@@ -28,7 +28,7 @@ public class CourseTeacherController {
     @RequestMapping(value = "/api/lookTeacherOfCourse",method = {RequestMethod.POST})
     public ResponseEntity<?> lookTeacherOfCourse(@RequestBody Map<String,Object> map) {
         logger.debug("lookTeacherOfCourse: " + map.toString());
-        List<CourseTeacher> courseTeacherList =courseTeacherService.lookTeacherOfCourse(map);
+        List<Map> courseTeacherList =courseTeacherService.lookTeacherOfCourse(map);
         Map<String,Object> response = new HashMap<>();
         response.put("teacherList",courseTeacherList);
         return ResponseEntity.ok(response);

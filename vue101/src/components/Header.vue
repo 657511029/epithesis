@@ -1,7 +1,8 @@
 <template>
+  <div>
     <header class="header">
       <div class="header-logo">
-          Practical Teaching
+        Practical Teaching
       </div>
       <div class="header-search">
         <el-form class="search-container">
@@ -11,21 +12,21 @@
       </div>
       <ul class="header-list">
         <li>
-            <a :class="{ active: '/' === $route.path }" href="/">
+          <a :class="{ active: '/' === $route.path }" href="/">
               <span>
                 首页
               </span>
-            </a>
+          </a>
         </li>
         <li>
-            <a :class="{ active: '/DiscussView' === $route.path }">
-              讨论区
-            </a>
+          <a :class="{ active: '/DiscussView' === $route.path }">
+            讨论区
+          </a>
         </li>
         <li>
-            <a :class="{ active: '/ConcernView' === $route.path }">
-              关于
-            </a>
+          <a :class="{ active: '/ConcernView' === $route.path }">
+            关于
+          </a>
         </li>
         <li>
           <el-dropdown v-if="ifLogin" >
@@ -41,17 +42,43 @@
                   登出
                 </span>
               </el-dropdown-item>
+              <el-dropdown-item icon='el-icon-delete'  style="width: 80px;">
+                <span href="#"  @click="deleteUser" style="text-decoration: none; color: #505458;">
+                  注销
+                </span>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-<!--          <a v-if="ifLogin" :class="{ active: '/SpaceView' === $route.path }" href="/SpaceView">-->
-<!--            个人中心-->
-<!--          </a>-->
+          <!--          <a v-if="ifLogin" :class="{ active: '/SpaceView' === $route.path }" href="/SpaceView">-->
+          <!--            个人中心-->
+          <!--          </a>-->
           <a v-else :class="{ active: '/SpaceView' === $route.path }" href="/SpaceView">
             登录
           </a>
         </li>
       </ul>
     </header>
+    <el-dialog
+      title="修改个人信息"
+      width="400px"
+      :visible.sync="deleteVisible"
+      :before-close="handleDeleteClose"
+    >
+      <el-form  >
+        <div class="updateInfo" style="width: 100%">
+            <el-form-item  prop="message">
+              <span>您的账号将会被永久注销，所有信息将不可恢复，请确定注销账号</span>
+            </el-form-item>
+      <div slot="footer"  class="dialog-footer" style="padding: 0 100px">
+    <el-button @click="submit" >确认</el-button>
+    <el-button type="primary" @click="handleDeleteClose">取消</el-button>
+
+  </div>
+        </div>
+      </el-form>
+    </el-dialog>
+  </div>
+
 </template>
 
 <script>
@@ -59,6 +86,7 @@ export default {
   name: 'Header',
   data: function () {
     return {
+      deleteVisible: false,
       search: '',
       ifLogin: false,
       username: ''
@@ -75,6 +103,44 @@ export default {
     this.username = sessionStorage.getItem('username')
   },
   methods: {
+    deleteUser: function () {
+      this.deleteVisible = true
+    },
+    handleDeleteClose: function () {
+      this.deleteVisible = false
+    },
+    submit: function () {
+      this.$axios.post('http://localhost:8080/api/deleteUser', {
+        'userId': sessionStorage.getItem('userId')
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.loginOut()
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '注销失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '注销失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
     doSearch: function () {
       this.$router.push({name: 'SearchView', query: {content: this.search}})
       window.location.reload()
@@ -82,8 +148,13 @@ export default {
     loginOut: function () {
       sessionStorage.removeItem('username')
       sessionStorage.removeItem('isLogin')
-      window.location.reload()
+      // if (this.$route.path === '/') {
+      //   window.location.reload()
+      // } else {
+      //   this.$router.push('/')
+      // }
       this.$router.push('/')
+      window.location.reload()
     }
   }
 
@@ -91,6 +162,9 @@ export default {
 </script>
 
 <style scoped>
+.updateInfo {
+  overflow: auto;
+}
 .header{
   display: flex;
   padding: 0;

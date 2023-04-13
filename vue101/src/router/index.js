@@ -26,6 +26,7 @@ let router = new Router({
       name: 'HomeView',
       component: HomeView,
       meta: {
+        requireAuth: false,
         show: true
       }
     },
@@ -34,6 +35,7 @@ let router = new Router({
       name: 'LoginView',
       component: LoginView,
       meta: {
+        requireAuth: false,
         show: false
       }
     },
@@ -42,6 +44,7 @@ let router = new Router({
       name: 'RegisterView',
       component: RegisterView,
       meta: {
+        requireAuth: false,
         show: false
       }
     },
