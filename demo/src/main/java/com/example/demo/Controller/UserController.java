@@ -47,7 +47,7 @@ public class UserController {
     }
     @RequestMapping(value = "/api/lookUserInfo",method = {RequestMethod.POST})
     public ResponseEntity<?> lookUserInfo(@RequestBody Map<String,Object> map) {
-        logger.debug("modifyUserInfo: " + map.toString());
+        logger.debug("lookUserInfo: " + map.toString());
         User user = userService.lookUserInfo(map);
         Map<String,Object> response = new HashMap<>();
         response.put("user",user);
@@ -58,6 +58,22 @@ public class UserController {
                                               @RequestParam("id") String idStr ) throws Exception {
         logger.debug("modifyUserAvatar:");
         User user = userService.modifyUserAvatar(file,idStr);
+        Map<String,Object> response = new HashMap<>();
+        response.put("user",user);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/modifyPassword",method = {RequestMethod.POST})
+    public ResponseEntity<?> modifyPassword(@RequestBody Map<String,Object> map) {
+        logger.debug("modifyPassword: " + map.toString());
+        User user = userService.modifyPassword(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("user",user);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/deleteUser",method = {RequestMethod.POST})
+    public ResponseEntity<?> deleteUser(@RequestBody Map<String,Object> map) {
+        logger.debug("deleteUser: " + map.toString());
+        User user = userService.deleteUser(map);
         Map<String,Object> response = new HashMap<>();
         response.put("user",user);
         return ResponseEntity.ok(response);

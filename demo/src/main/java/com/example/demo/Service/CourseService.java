@@ -7,6 +7,7 @@ import com.example.demo.Exception.CannotBeenFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,5 +29,10 @@ public class CourseService {
         else {
             throw new CannotBeenFoundException("course");
         }
+    }
+    public List<CourseInfo> lookCourseInfoList(Map<String,Object> map){
+        String message = (String) map.get("message");
+        List<CourseInfo> courseInfoList = courseInfoDao.findAllByCourseNameLike("%" + message + "%");
+        return courseInfoList;
     }
 }

@@ -165,4 +165,35 @@ public class UserService {
         }
     }
 
+    public User modifyPassword(Map<String,Object> map){
+        Long id = Long.parseLong((String) map.get("userId"));
+        String oldPassword = (String) map.get("oldPassword");
+        String newPassword = (String) map.get("newPassword");
+        Optional<User> userOptional = userDao.findById(id);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            if(oldPassword.equals(user.getPassword())){
+                user.setPassword(newPassword);
+                userDao.save(user);
+                return user;
+            }
+            else {
+                throw new IncorrectException("oldPassword");
+            }
+        }
+        else {
+            throw new CannotBeenFoundException("user");
+        }
+    }
+    public User deleteUser(Map<String ,Object> map){
+        Long id = Long.parseLong((String) map.get("userId"));
+        Optional<User> userOptional = userDao.findById(id);
+        if(userOptional.isPresent()) {
+            User user = userOptional.get();
+            userDao.delete(user);
+            return user;
+        } else {
+            throw new CannotBeenFoundException("user");
+        }
+    }
 }

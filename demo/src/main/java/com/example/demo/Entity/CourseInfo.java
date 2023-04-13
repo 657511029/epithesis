@@ -22,6 +22,8 @@ public class CourseInfo {
 
     private String introduction;
 
+    private String courseInstitution;
+
     public Long getId() {
         return id;
     }
@@ -77,5 +79,13 @@ public class CourseInfo {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public String getCourseInstitution() {
+        return courseInstitution;
+    }
+
+    public void setCourseInstitution(String courseInstitution) {
+        this.courseInstitution = courseInstitution;
     }
 }

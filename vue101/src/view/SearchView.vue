@@ -20,8 +20,8 @@
         </div>
       </div>
      <ul class="search-content-list">
-       <li v-for="(item) in items.slice(start,end)" :key="item.courseId" class="search-content-list-number">
-         <router-link  :to="{path:'/CourseView',query:{courseId:item.courseId}}">
+       <li v-for="(item) in items.slice(start,end)" :key="item.id" class="search-content-list-number">
+         <router-link  :to="{path:'/CourseView',query:{courseId:item.id}}">
            <div class="search-content-list-number-container">
              <div class="search-content-name">
                {{item.courseName}}
@@ -62,7 +62,7 @@ export default {
   name: 'SearchView',
   data () {
     return {
-      content: 'a',
+      content: '',
       totalPage: 1,
       currentPage: 1, // 当前页数 ，默认为1
       pageSize: 1, // 每页显示数量
@@ -72,31 +72,32 @@ export default {
   },
   mounted () {
     this.content = this.$route.query.content
-    this.courseNumber = 3
-    this.totalPage = (this.courseNumber + this.pageSize - 1) / this.pageSize
-    this.items = [
-      {
-        courseName: 'a',
-        courseInstitution: 'a',
-        experimentNumber: 0,
-        studentNumber: 0,
-        courseId: 0
-      },
-      {
-        courseName: 'b',
-        courseInstitution: 'b',
-        experimentNumber: 1,
-        studentNumber: 1,
-        courseId: 1
-      },
-      {
-        courseName: 'c',
-        courseInstitution: 'c',
-        experimentNumber: 2,
-        studentNumber: 2,
-        courseId: 2
-      }
-    ]
+    // this.courseNumber = 3
+    // this.totalPage = (this.courseNumber + this.pageSize - 1) / this.pageSize
+    // this.items = [
+    //   {
+    //     courseName: 'a',
+    //     courseInstitution: 'a',
+    //     experimentNumber: 0,
+    //     studentNumber: 0,
+    //     courseId: 0
+    //   },
+    //   {
+    //     courseName: 'b',
+    //     courseInstitution: 'b',
+    //     experimentNumber: 1,
+    //     studentNumber: 1,
+    //     courseId: 1
+    //   },
+    //   {
+    //     courseName: 'c',
+    //     courseInstitution: 'c',
+    //     experimentNumber: 2,
+    //     studentNumber: 2,
+    //     courseId: 2
+    //   }
+    // ]
+    this.getCourseList()
   },
   computed: {
     // 监听当前页curPage的变化，求得当前页的起始行start和末行end，自定更新至v-for
@@ -123,6 +124,40 @@ export default {
       } else {
         this.currentPage = this.currentPage + 1
       }
+    },
+    getCourseList () {
+      this.$axios.post('http://localhost:8080/api/lookCourseInfoList', {
+        'message': this.content
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.items = resp.data.courseList
+            this.courseNumber = this.items.length
+            this.totalPage = (this.courseNumber + this.pageSize - 1) / this.pageSize
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
     }
   }
 }

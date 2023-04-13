@@ -7,6 +7,11 @@
           <strong>{{course.courseName}}</strong>
        </span>
       </p>
+      <p>
+        <span style="font-size: 20px;margin-top: 40px">
+          {{course.courseInstitution}}
+        </span>
+      </p>
     </div>
   </div>
   <div class="course-intro">
@@ -108,7 +113,8 @@ export default {
         experimentNumber: 0,
         studentNumber: 0,
         courseId: 0,
-        introduction: ''
+        introduction: '',
+        courseInstitution: ''
       },
       teacherList: []
     }
@@ -151,6 +157,7 @@ export default {
             this.course.studentNumber = resp.data.course.studentNumber
             this.course.experimentNumber = resp.data.course.experimentNumber
             this.course.introduction = resp.data.course.introduction
+            this.course.courseInstitution = resp.data.course.courseInstitution
           } else {
             let message = resp.data.message
             this.$message({

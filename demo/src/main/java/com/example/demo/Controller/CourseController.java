@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -28,6 +29,14 @@ public class CourseController {
         CourseInfo courseInfo = courseService.lookCourseInfo(map);
         Map<String,Object> response = new HashMap<>();
         response.put("course",courseInfo);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookCourseInfoList",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookCourseInfoList(@RequestBody Map<String,Object> map) {
+        logger.debug("lookCourseInfoList: " + map.toString());
+        List<CourseInfo> courseInfoList = courseService.lookCourseInfoList(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("courseList",courseInfoList);
         return ResponseEntity.ok(response);
     }
 }
