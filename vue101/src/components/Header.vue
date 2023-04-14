@@ -42,6 +42,11 @@
                   登出
                 </span>
               </el-dropdown-item>
+              <el-dropdown-item icon='el-icon-edit'  style="width: 80px;">
+                <span href="#"  @click="modifyPassword" style="text-decoration: none; color: #505458;">
+                  修改密码
+                </span>
+              </el-dropdown-item>
               <el-dropdown-item icon='el-icon-delete'  style="width: 80px;">
                 <span href="#"  @click="deleteUser" style="text-decoration: none; color: #505458;">
                   注销
@@ -59,7 +64,7 @@
       </ul>
     </header>
     <el-dialog
-      title="修改个人信息"
+      title="删除账户"
       width="400px"
       :visible.sync="deleteVisible"
       :before-close="handleDeleteClose"
@@ -77,6 +82,30 @@
         </div>
       </el-form>
     </el-dialog>
+    <el-dialog
+      title="修改密码"
+      width="500px"
+      :visible.sync="modifyVisible"
+      :before-close="handleModifyClose"
+    >
+      <el-form :model="modifyPasswordForm" :rules="rules" ref="modifyPasswordForm" label-width="100px" >
+        <div class="updateInfo">
+            <el-form-item label="旧密码" prop="oldPassword">
+              <el-input type="password" placeholder="旧密码" clearable v-model="modifyPasswordForm.oldPassword" autocomplete="new-password"></el-input>
+            </el-form-item>
+            <el-form-item label="新密码" prop="newPassword">
+              <el-input type="password" placeholder="新密码" clearable v-model="modifyPasswordForm.newPassword" autocomplete="new-password"></el-input>
+            </el-form-item>
+            <el-form-item label="确认新密码" prop="newPassword1">
+              <el-input type="password" placeholder="确认新密码" clearable v-model="modifyPasswordForm.newPassword1" autocomplete="new-password"></el-input>
+            </el-form-item>
+        </div>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="submit1">提 交</el-button>
+        <el-button @click="handleModifyClose">取 消</el-button>
+  </span>
+    </el-dialog>
   </div>
 
 </template>
@@ -85,11 +114,43 @@
 export default {
   name: 'Header',
   data: function () {
+    const pwdCheck = async (rule, value, callback) => {
+      if (value.length < 6) {
+        return callback(new Error('密码不能少于6位！'))
+      } else if (value.length > 16) {
+        return callback(new Error('密码最长不能超过16位！'))
+      } else {
+        callback()
+      }
+    }
+    const pwdAgainCheck = async (rule, value, callback) => {
+      if (value.length < 1) {
+        return callback(new Error('重复密码不能为空！'))
+      } else if (this.modifyPasswordForm.newPassword !== this.modifyPasswordForm.newPassword1) {
+        return callback(new Error('两次输入密码不一致！'))
+      } else {
+        callback()
+      }
+    }
     return {
       deleteVisible: false,
+      modifyVisible: false,
       search: '',
       ifLogin: false,
-      username: ''
+      username: '',
+      modifyPasswordForm: {
+        oldPassword: '',
+        newPassword: '',
+        newPassword1: ''
+      },
+      rules: {
+        oldPassword: [{required: true, message: '请输入旧密码', trigger: 'blur'},
+          {validator: pwdCheck, trigger: 'blur'}],
+        newPassword: [{required: true, message: '请输入新密码', trigger: 'blur'},
+          {validator: pwdCheck, trigger: 'blur'}],
+        newPassword1: [{required: true, message: '请确认新密码', trigger: 'blur'},
+          {validator: pwdAgainCheck, trigger: 'blur'}]
+      }
     }
   },
   mounted () {
@@ -106,8 +167,14 @@ export default {
     deleteUser: function () {
       this.deleteVisible = true
     },
+    modifyPassword: function () {
+      this.modifyVisible = true
+    },
     handleDeleteClose: function () {
       this.deleteVisible = false
+    },
+    handleModifyClose: function () {
+      this.modifyVisible = false
     },
     submit: function () {
       this.$axios.post('http://localhost:8080/api/deleteUser', {
@@ -116,6 +183,11 @@ export default {
         .then(resp => {
           if (resp.status === 200) {
             console.log(resp)
+            this.$message({
+              message: '注销账户成功 ',
+              type: 'success',
+              duration: 1500
+            })
             this.loginOut()
           } else {
             let message = resp.data.message
@@ -140,6 +212,52 @@ export default {
             this.$message.error('发生错误！')
           }
         })
+    },
+    submit1: function () {
+      this.$refs.modifyPasswordForm.validate((valid) => {
+        if (valid) {
+          // 只能接受json格式的数据
+          this.$axios.post('http://localhost:8080/api/modifyPassword', {
+            'userId': sessionStorage.getItem('userId'),
+            'oldPassword': this.modifyPasswordForm.oldPassword,
+            'newPassword': this.modifyPasswordForm.newPassword
+          })
+            .then(resp => {
+              if (resp.status === 200) {
+                console.log(resp)
+                this.$message({
+                  message: '密码修改成功,请重新登录 ',
+                  type: 'success',
+                  duration: 1500
+                })
+                this.loginOut()
+              } else {
+                let message = resp.data.message
+                this.$message({
+                  message: '密码修改失败失败! ' + message,
+                  type: 'warning',
+                  duration: 1500
+                })
+              }
+            })
+            .catch(error => {
+              if (error.response) {
+                console.log(error.response)
+                let message = error.response.data.message
+                this.$message({
+                  message: '密码修改失败失败! ' + message,
+                  type: 'warning',
+                  duration: 1500
+                })
+              } else {
+                console.log(error)
+                this.$message.error('发生错误！')
+              }
+            })
+        } else {
+          return false
+        }
+      })
     },
     doSearch: function () {
       this.$router.push({name: 'SearchView', query: {content: this.search}})

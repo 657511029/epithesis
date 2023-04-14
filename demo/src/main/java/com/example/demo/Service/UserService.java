@@ -1,5 +1,7 @@
 package com.example.demo.Service;
 
+import com.example.demo.Dao.CourseStudentDao;
+import com.example.demo.Dao.CourseTeacherDao;
 import com.example.demo.Dao.UserDao;
 import com.example.demo.Entity.User;
 import com.example.demo.Exception.CannotBeenFoundException;
@@ -24,6 +26,12 @@ import java.util.UUID;
 public class UserService {
     @Autowired
     public UserDao userDao;
+
+    @Autowired
+    public CourseTeacherDao courseTeacherDao;
+
+    @Autowired
+    public CourseStudentDao courseStudentDao;
     public User register(Map<String,Object> map) {
         //获取信息
 //        String phoneNumber = (String)map.get("phoneNumber");
@@ -191,6 +199,8 @@ public class UserService {
         if(userOptional.isPresent()) {
             User user = userOptional.get();
             userDao.delete(user);
+            courseTeacherDao.deleteAllByUserId((String) map.get("userId"));
+            courseStudentDao.deleteAllByUserId((String) map.get("userId"));
             return user;
         } else {
             throw new CannotBeenFoundException("user");

@@ -41,7 +41,10 @@
         {{course.studentNumber}}
       </div>
     </div>
-    <div class="course-join">
+    <div v-if="lookIfJoin === 'true'" class="course-join" @click="outCourse">
+      已加入课程
+    </div>
+    <div v-else class="course-join" @click="joinCourse">
       加入课程
     </div>
   </div>
@@ -104,6 +107,7 @@ export default {
   },
   data () {
     return {
+      lookIfJoin: '加入课程',
       courseId: '',
       componentNext: 'Chapter',
       course: {
@@ -125,8 +129,116 @@ export default {
   mounted () {
     this.getCourse()
     this.getTeacherList()
+    this.getIfJoin()
   },
   methods: {
+    joinCourse: function () {
+      this.$axios.post('http://localhost:8080/api/joinCourse', {
+        'courseId': this.courseId,
+        'userId': sessionStorage.getItem('userId')
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.$message({
+              message: '加入课程成功 ',
+              type: 'success',
+              duration: 1500
+            })
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '加入课程失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '加入课程失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
+    outCourse: function () {
+      this.$axios.post('http://localhost:8080/api/outCourse', {
+        'courseId': this.courseId,
+        'userId': sessionStorage.getItem('userId')
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.$message({
+              message: '退出课程成功 ',
+              type: 'success',
+              duration: 1500
+            })
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '退出课程失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '退出课程失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
+    getIfJoin: function () {
+      this.$axios.post('http://localhost:8080/api/lookIfJoinCourse', {
+        'courseId': this.courseId,
+        'userId': sessionStorage.getItem('userId')
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.lookIfJoin = resp.data.lookIfJoin
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
     toChapter: function () {
       this.componentNext = 'Chapter'
     },
