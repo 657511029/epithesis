@@ -12,6 +12,8 @@ public class CourseInfo {
     private Long id;
 
     private String backgroundUrl;
+
+    private String displayUrl;
     private String courseName;
 
     private String courseTime;
@@ -87,5 +89,13 @@ public class CourseInfo {
 
     public void setCourseInstitution(String courseInstitution) {
         this.courseInstitution = courseInstitution;
+    }
+
+    public String getDisplayUrl() {
+        return displayUrl;
+    }
+
+    public void setDisplayUrl(String displayUrl) {
+        this.displayUrl = displayUrl;
     }
 }

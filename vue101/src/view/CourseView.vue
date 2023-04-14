@@ -42,12 +42,31 @@
       </div>
     </div>
     <div v-if="lookIfJoin === 'true'" class="course-join" @click="outCourse">
-      已加入课程
+      退出课程
     </div>
     <div v-else class="course-join" @click="joinCourse">
       加入课程
     </div>
   </div>
+  <el-dialog
+    title="退出课程"
+    width="400px"
+    :visible.sync="outVisible"
+    :before-close="handleOutClose"
+  >
+    <el-form  >
+      <div class="updateInfo" style="width: 100%">
+        <el-form-item  prop="message">
+          <span>退出课程之后，你在该课程中的所有数据将被清空并永不可恢复</span>
+        </el-form-item>
+        <div slot="footer"  class="dialog-footer" style="padding: 0 100px">
+          <el-button @click="submit" >确认</el-button>
+          <el-button type="primary" @click="handleOutClose">取消</el-button>
+
+        </div>
+      </div>
+    </el-form>
+  </el-dialog>
   <section class="course-content">
     <aside class="course-content-left">
       <div class="course-content-intro">
@@ -107,6 +126,7 @@ export default {
   },
   data () {
     return {
+      outVisible: false,
       lookIfJoin: '加入课程',
       courseId: '',
       componentNext: 'Chapter',
@@ -145,6 +165,7 @@ export default {
               type: 'success',
               duration: 1500
             })
+            window.location.reload()
           } else {
             let message = resp.data.message
             this.$message({
@@ -170,6 +191,12 @@ export default {
         })
     },
     outCourse: function () {
+      this.outVisible = true
+    },
+    handleOutClose: function () {
+      this.outVisible = false
+    },
+    submit: function () {
       this.$axios.post('http://localhost:8080/api/outCourse', {
         'courseId': this.courseId,
         'userId': sessionStorage.getItem('userId')
@@ -182,6 +209,7 @@ export default {
               type: 'success',
               duration: 1500
             })
+            window.location.reload()
           } else {
             let message = resp.data.message
             this.$message({

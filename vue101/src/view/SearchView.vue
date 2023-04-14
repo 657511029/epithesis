@@ -65,7 +65,7 @@ export default {
       content: '',
       totalPage: 1,
       currentPage: 1, // 当前页数 ，默认为1
-      pageSize: 1, // 每页显示数量
+      pageSize: 8, // 每页显示数量
       courseNumber: 0,
       items: []
     }
@@ -134,7 +134,7 @@ export default {
             console.log(resp)
             this.items = resp.data.courseList
             this.courseNumber = this.items.length
-            this.totalPage = (this.courseNumber + this.pageSize - 1) / this.pageSize
+            this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
           } else {
             let message = resp.data.message
             this.$message({

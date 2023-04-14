@@ -6,16 +6,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class CourseStudent {
+public class ExperimentStudent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String experimentId;
+
     private String courseId;
 
     private String userId;
-
-    private Integer passNumber;
 
     public Long getId() {
         return id;
@@ -23,6 +23,14 @@ public class CourseStudent {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getExperimentId() {
+        return experimentId;
+    }
+
+    public void setExperimentId(String experimentId) {
+        this.experimentId = experimentId;
     }
 
     public String getCourseId() {
@@ -39,14 +47,5 @@ public class CourseStudent {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-
-    public Integer getPassNumber() {
-        return passNumber;
-    }
-
-    public void setPassNumber(Integer passNumber) {
-        this.passNumber = passNumber;
     }
 }

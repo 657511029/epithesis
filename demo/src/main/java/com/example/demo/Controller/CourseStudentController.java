@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Entity.CourseInfo;
 import com.example.demo.Entity.CourseStudent;
 import com.example.demo.Service.CourseStudentService;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -44,6 +46,30 @@ public class CourseStudentController {
         CourseStudent courseStudent =courseStudentService.outCourse(map);
         Map<String,Object> response = new HashMap<>();
         response.put("courseStudent",courseStudent);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookCourseStudent",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookCourseStudent(@RequestBody Map<String,Object> map) {
+        logger.debug("lookCourseStudent: " + map.toString());
+        CourseStudent courseStudent =courseStudentService.lookCourseStudent(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("courseStudent",courseStudent);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookCourseStudentList",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookCourseStudentList(@RequestBody Map<String,Object> map) {
+        logger.debug("lookCourseStudentList: " + map.toString());
+       List<Map> courseStudentList =courseStudentService.lookCourseStudentList(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("courseStudentList",courseStudentList);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookCourseListOfUser",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookCourseListOfUser(@RequestBody Map<String,Object> map) {
+        logger.debug("lookCourseListOfUser: " + map.toString());
+        List<CourseInfo> courseStudentList =courseStudentService.lookCourseListOfUser(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("courseList",courseStudentList);
         return ResponseEntity.ok(response);
     }
 }

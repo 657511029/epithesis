@@ -1,17 +1,17 @@
 <template>
 <div class="courseInfo-wrap">
   <div class="course-list">
-    <div class="course-item" v-for="(item) in courseList.slice(start,end)" :key="item.courseId">
+    <div class="course-item" v-for="(item) in courseList.slice(start,end)" :key="item.id">
       <router-link :to="{path:'/CourseView',query:{courseId:item.courseId}}">
         <div class="course-img">
-          <img :src="item.url" alt="">
+          <img :src="item.displayUrl" alt="">
         </div>
        <div class="course-title">
          <span>{{item.courseName}}</span>
        </div>
         <div class="course-teacher">
           <span class="prev el-icon-traffic-school"></span>
-          <span>{{item.courseTeacher}}</span>
+          <span>{{item.courseInstitution}}</span>
         </div>
         <div class="course-info">
           <span class="experimentNumber">
@@ -56,90 +56,91 @@ export default {
     }
   },
   mounted () {
-    this.courseNumber = 10
-    this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
-    this.courseList = [
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 0
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 1
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 2
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 3
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 4
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 5
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 6
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 7
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 8
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseTeacher: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 9
-      }
-    ]
+    // this.courseNumber = 10
+    // this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
+    // this.courseList = [
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 0
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 1
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 2
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 3
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 4
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 5
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 6
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 7
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 8
+    //   },
+    //   {
+    //     url: 'static/userPic/userPic.jpg',
+    //     courseName: '计算机基础',
+    //     courseTeacher: '山水城市',
+    //     experimentNumber: 7,
+    //     studentNumber: 110,
+    //     courseId: 9
+    //   }
+    // ]
+    this.getCourseList()
   },
   computed: {
     // 监听当前页curPage的变化，求得当前页的起始行start和末行end，自定更新至v-for
@@ -151,6 +152,40 @@ export default {
     }
   },
   methods: {
+    getCourseList () {
+      this.$axios.post('http://localhost:8080/api/lookCourseListOfUser', {
+        'userId': sessionStorage.getItem('userId')
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.courseList = resp.data.courseList
+            this.courseNumber = this.courseList.length
+            this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
     prevPage () {
       console.log(this.currentPage)
       if (this.currentPage === 1) {

@@ -25,7 +25,7 @@
       </div>
       <div class="rank-split">
       </div>
-      <div class="rank-item" v-for="(item,index) in rankList" :key="index">
+      <div class="rank-item" v-for="(item,index) in rankList.slice(0,9)" :key="index">
          <span>
           {{index + 1}}
         </span>
@@ -33,7 +33,7 @@
           {{item.username}}
         </span>
         <span>
-          {{item.rankNumber}}
+          {{item.passNumber}}
         </span>
       </div>
     </div>
@@ -46,12 +46,15 @@ export default {
   props: ['parentId'],
   data () {
     return {
-      username: '黄一雄',
+      username: sessionStorage.getItem('username'),
       courseId: 0,
       rankNumber: 0,
       isActive: '未上榜',
       rankList: []
     }
+  },
+  created () {
+    this.courseId = this.parentId
   },
   mounted () {
     this.getRankList()
@@ -60,51 +63,115 @@ export default {
   },
   methods: {
     getRankList: function () {
-      this.rankList = [
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        },
-        {
-          username: '钱钱钱',
-          rankNumber: 100
-        }
-      ]
+      // this.rankList = [
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   },
+      //   {
+      //     username: '钱钱钱',
+      //     rankNumber: 100
+      //   }
+      // ]
+      this.$axios.post('http://localhost:8080/api/lookCourseStudentList', {
+        'courseId': this.courseId
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.rankList = resp.data.courseStudentList
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
     },
     getRank: function () {
-      this.rankNumber = 1
+      this.$axios.post('http://localhost:8080/api/lookCourseStudent', {
+        'courseId': this.courseId,
+        'userId': sessionStorage.getItem('userId')
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            if (resp.data.courseStudent === null) {
+              this.rankNumber = 0
+            } else {
+              this.rankNumber = resp.data.courseStudent.passNumber
+            }
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
     },
     getIsActive: function () {
       this.isActive = '未上榜'

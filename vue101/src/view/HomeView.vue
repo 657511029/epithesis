@@ -390,12 +390,6 @@ export default {
     }
   },
   methods: {
-    toLogin: function () {
-      this.$router.push({name: 'LoginView'})
-    },
-    toRegister: function () {
-      this.$router.push({name: 'RegisterView'})
-    },
     changeList (index) {
       this.chooseNumber = index + 2
       this.directionList = this.directionList2
