@@ -35,4 +35,18 @@ public class CourseService {
         List<CourseInfo> courseInfoList = courseInfoDao.findAllByCourseNameLike("%" + message + "%");
         return courseInfoList;
     }
+    public List<CourseInfo> lookCourseInfoRecommendList(Map<String,Object> map){
+        List<CourseInfo> courseInfoList = courseInfoDao.findAllRecommend();
+        return courseInfoList;
+    }
+
+    public List<CourseInfo> lookCourseInfoAllList(Map<String,Object> map){
+        List<CourseInfo> courseInfoList = courseInfoDao.findAll();
+        return courseInfoList;
+    }
+    public List<CourseInfo> lookCourseInfoChooseList(Map<String,Object> map){
+        String chooseName = (String)map.get("chooseName");
+        List<CourseInfo> courseInfoList = courseInfoDao.findAllByChooseName(chooseName);
+        return courseInfoList;
+    }
 }

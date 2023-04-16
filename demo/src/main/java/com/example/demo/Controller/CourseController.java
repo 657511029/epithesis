@@ -39,4 +39,28 @@ public class CourseController {
         response.put("courseList",courseInfoList);
         return ResponseEntity.ok(response);
     }
+    @RequestMapping(value = "/api/lookCourseInfoRecommendList",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookCourseInfoRecommendList(@RequestBody Map<String,Object> map) {
+        logger.debug("lookCourseInfoRecommendList: " + map.toString());
+        List<CourseInfo> courseInfoList = courseService.lookCourseInfoRecommendList(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("courseList",courseInfoList);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookCourseInfoChooseList",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookCourseInfoChooseList(@RequestBody Map<String,Object> map) {
+        logger.debug("lookCourseInfoChooseList: " + map.toString());
+        List<CourseInfo> courseInfoList = courseService.lookCourseInfoChooseList(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("courseList",courseInfoList);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookCourseInfoAllList",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookCourseInfoAllList(@RequestBody Map<String,Object> map) {
+        logger.debug("lookCourseInfoAllList: " + map.toString());
+        List<CourseInfo> courseInfoList = courseService.lookCourseInfoAllList(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("courseList",courseInfoList);
+        return ResponseEntity.ok(response);
+    }
 }

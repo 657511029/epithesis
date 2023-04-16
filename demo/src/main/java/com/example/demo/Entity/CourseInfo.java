@@ -26,6 +26,8 @@ public class CourseInfo {
 
     private String courseInstitution;
 
+    private String chooseName;
+
     public Long getId() {
         return id;
     }
@@ -97,5 +99,13 @@ public class CourseInfo {
 
     public void setDisplayUrl(String displayUrl) {
         this.displayUrl = displayUrl;
+    }
+
+    public String getChooseName() {
+        return chooseName;
+    }
+
+    public void setChooseName(String chooseName) {
+        this.chooseName = chooseName;
     }
 }

@@ -10,10 +10,10 @@
      </div>
      <div class="home-recommend-content">
        <div class="home-recommend-list">
-         <div class="home-recommend-item" v-for="(item) in courseList.slice(0,5)" :key="item.courseId">
-           <router-link :to="{path:'/CourseView',query:{courseId:item.courseId}}">
+         <div class="home-recommend-item" v-for="(item) in courseList.slice(0,5)" :key="item.id">
+           <router-link :to="{path:'/CourseView',query:{courseId:item.id}}">
              <div class="course-img">
-               <img :src="item.url" alt="">
+               <img :src="item.displayUrl" alt="">
              </div>
              <div class="course-title">
                <span>{{item.courseName}}</span>
@@ -41,8 +41,8 @@
              <div class="choose-direction-content">
                <div class="choose-direction-list">
                  <span  title="全部" :class="generateClassName(1)" style="color: rgb(0, 0, 0);" @click="changeAllList">全部</span>
-                 <span  v-for="(item,index) in chooseList" :class="generateClassName(index + 2)" :key="index" style="color: rgb(0, 0, 0);" @click="changeList(index)" >
-                      {{item}}
+                 <span  v-for="(item,index) in chooseList" :class="generateClassName(index + 2)" :key="item.id" style="color: rgb(0, 0, 0);" @click="changeList(index,item.chooseName)" >
+                      {{item.chooseName}}
                  </span>
                </div>
              </div>
@@ -50,10 +50,10 @@
          </div>
          <div class="choose-direction-course">
            <div class="choose-course-list">
-             <div class="choose-course-item" v-for="(item) in directionList.slice(start,end)" :key="item.courseId">
-               <router-link :to="{path:'/CourseView',query:{courseId:item.courseId}}">
+             <div class="choose-course-item" v-for="(item) in directionList.slice(start,end)" :key="item.id">
+               <router-link :to="{path:'/CourseView',query:{courseId:item.id}}">
                  <div class="course-img">
-                   <img :src="item.url" alt="">
+                   <img :src="item.displayUrl" alt="">
                  </div>
                  <div class="course-title">
                    <span>{{item.courseName}}</span>
@@ -108,278 +108,14 @@ export default {
       courseNumber: 0,
       courseList: [],
       chooseList: [],
-      chooseNumber: 2,
-      directionList: [],
-      directionList1: []
+      chooseNumber: 1,
+      directionList: []
     }
   },
   mounted () {
-    this.courseNumber = 10
-    this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
-    this.courseList = [
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 0
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 1
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 2
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 3
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 4
-      }
-    ]
-    this.chooseList = [
-      '计算机1',
-      '计算机2',
-      '计算机3',
-      '计算机4',
-      '计算机5',
-      '计算机6',
-      '计算机7',
-      '计算机8',
-      '计算机9',
-      '计算机10',
-      '计算机11',
-      '计算机12',
-      '计算机13',
-      '计算机14'
-    ]
-    this.directionList = [
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 0
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 1
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 2
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 3
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 4
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 5
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 6
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 7
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 8
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 9
-      }
-    ]
-    this.directionList1 = [
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 0
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 1
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 2
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 3
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 4
-      }
-    ]
-    this.directionList2 = [
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 0
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 1
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 2
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 3
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 4
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 5
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 6
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 7
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 8
-      },
-      {
-        url: 'static/userPic/userPic.jpg',
-        courseName: '计算机基础',
-        courseInstitution: '山水城市',
-        experimentNumber: 7,
-        studentNumber: 110,
-        courseId: 9
-      }
-    ]
+    this.getRecommendList()
+    this.getChooseList()
+    this.changeAllList()
   },
   computed: {
     start: function () {
@@ -390,19 +126,142 @@ export default {
     }
   },
   methods: {
-    changeList (index) {
+    getChooseList () {
+      this.$axios.post('http://localhost:8080/api/lookChooseList', {
+        // 'message': this.content
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.chooseList = resp.data.chooseList
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程类型列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程类型列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
+    getRecommendList () {
+      this.$axios.post('http://localhost:8080/api/lookCourseInfoRecommendList', {
+        // 'message': this.content
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.courseList = resp.data.courseList
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
+    changeList (index, chooseName) {
       this.chooseNumber = index + 2
-      this.directionList = this.directionList2
-      this.courseNumber = 10
-      this.currentPage = 1
-      this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
+      this.$axios.post('http://localhost:8080/api/lookCourseInfoChooseList', {
+        // 'message': this.content
+        'chooseName': chooseName
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.directionList = resp.data.courseList
+            this.courseNumber = this.directionList.length
+            this.currentPage = 1
+            this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
     },
     changeAllList () {
       this.chooseNumber = 1
-      this.directionList = this.directionList1
-      this.courseNumber = 5
-      this.currentPage = 1
-      this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
+      this.$axios.post('http://localhost:8080/api/lookCourseInfoAllList', {
+        // 'message': this.content
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.directionList = resp.data.courseList
+            this.courseNumber = this.directionList.length
+            this.currentPage = 1
+            this.totalPage = Math.ceil(this.courseNumber / this.pageSize)
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取课程列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
     },
     generateClassName (index) {
       if (index === this.chooseNumber) {
