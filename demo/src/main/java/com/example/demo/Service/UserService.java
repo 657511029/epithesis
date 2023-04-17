@@ -165,7 +165,6 @@ public class UserService {
             User user = userOptional.get();
             user.setAvatarUrl(address1 +filename);
             userDao.save(user);
-            System.out.println(address + filename);
             return user;
         }
         else {

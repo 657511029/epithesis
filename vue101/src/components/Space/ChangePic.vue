@@ -30,39 +30,47 @@ export default {
       //     'Content-Type': 'multipart/form-data'
       //   }
       // }
-      let formData = new FormData()
-      // 通过append()方法追加数据
-      formData.append('avatarFile', this.$refs.uploadFile.files[0])
-      console.log(this.$refs.uploadFile.files[0])
-      formData.append('id', sessionStorage.getItem('userId'))
-      this.$axios.post('http://localhost:8080/api/modifyUserAvatar', formData)
-        .then(resp => {
-          if (resp.status === 200) {
-            console.log(resp)
-            window.location.reload()
-          } else {
-            let message = resp.data.message
-            this.$message({
-              message: '更新头像失败! ' + message,
-              type: 'warning',
-              duration: 1500
-            })
-          }
+      if (this.$refs.uploadFile.files.length === 0) {
+        this.$message({
+          message: '未上传新头像',
+          type: 'warning',
+          duration: 1500
         })
-        .catch(error => {
-          if (error.response) {
-            console.log(error.response)
-            let message = error.response.data.message
-            this.$message({
-              message: '更新头像失败! ' + message,
-              type: 'warning',
-              duration: 1500
-            })
-          } else {
-            console.log(error)
-            this.$message.error('发生错误！')
-          }
-        })
+      } else {
+        let formData = new FormData()
+        // 通过append()方法追加数据
+        formData.append('avatarFile', this.$refs.uploadFile.files[0])
+        console.log(this.$refs.uploadFile.files[0])
+        formData.append('id', sessionStorage.getItem('userId'))
+        this.$axios.post('http://localhost:8080/api/modifyUserAvatar', formData)
+          .then(resp => {
+            if (resp.status === 200) {
+              console.log(resp)
+              window.location.reload()
+            } else {
+              let message = resp.data.message
+              this.$message({
+                message: '更新头像失败! ' + message,
+                type: 'warning',
+                duration: 1500
+              })
+            }
+          })
+          .catch(error => {
+            if (error.response) {
+              console.log(error.response)
+              let message = error.response.data.message
+              this.$message({
+                message: '更新头像失败! ' + message,
+                type: 'warning',
+                duration: 1500
+              })
+            } else {
+              console.log(error)
+              this.$message.error('发生错误！')
+            }
+          })
+      }
     },
     getAvatarUrl: function () {
       this.$axios.post('http://localhost:8080/api/lookUserInfo', {

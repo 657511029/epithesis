@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 public interface CourseInfoDao extends CrudRepository<CourseInfo,Long> {
     public Optional<CourseInfo> findById(Long id);
 
+    public CourseInfo findByCourseName(String courseName);
+
     public List<CourseInfo> findAllByCourseNameLike(String courseName);
 
     List<CourseInfo> findAllByChooseName(String chooseName);

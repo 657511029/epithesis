@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +63,46 @@ public class CourseController {
         List<CourseInfo> courseInfoList = courseService.lookCourseInfoAllList(map);
         Map<String,Object> response = new HashMap<>();
         response.put("courseList",courseInfoList);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/addCourse",method = {RequestMethod.POST})
+    public ResponseEntity<?> addCourse(@RequestParam("courseName")String courseName,@RequestParam("courseTime")String courseTime, @RequestParam("courseInstitution") String courseInstitution, @RequestParam("introduction") String introduction,@RequestParam("chooseName") String chooseName,@RequestParam("userId") String userId) {
+        logger.debug("addCourse: ");
+       CourseInfo courseInfo = courseService.addCourse(courseName, courseTime, courseInstitution, introduction, chooseName, userId);
+        Map<String,Object> response = new HashMap<>();
+        response.put("course",courseInfo);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/modifyCourse",method = {RequestMethod.POST})
+    public ResponseEntity<?> modifyCourse(@RequestParam("courseName")String courseName,@RequestParam("courseTime")String courseTime, @RequestParam("courseInstitution") String courseInstitution, @RequestParam("introduction") String introduction,@RequestParam("chooseName") String chooseName,@RequestParam("courseId") String courseId) {
+        logger.debug("addCourse: ");
+        CourseInfo courseInfo = courseService.modifyCourseInfo(courseName, courseTime, courseInstitution, introduction, chooseName, courseId);
+        Map<String,Object> response = new HashMap<>();
+        response.put("course",courseInfo);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/deleteCourse",method = {RequestMethod.POST})
+    public ResponseEntity<?> deleteCourse(@RequestBody Map<String,Object> map) {
+        logger.debug("deleteCourse: " + map.toString());
+        CourseInfo courseInfo = courseService.deleteCourse(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("course",courseInfo);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/modifyDisplayUrl",method = {RequestMethod.POST})
+    public ResponseEntity<?> modifyDisplayUrl(@RequestParam("displayFile")MultipartFile file,@RequestParam("courseId") String courseId) {
+        logger.debug("modifyDisplayUrl: ");
+        CourseInfo courseInfo = courseService.modifyDisplayUrl(file,courseId);
+        Map<String,Object> response = new HashMap<>();
+        response.put("course",courseInfo);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/modifyBackgroundUrl",method = {RequestMethod.POST})
+    public ResponseEntity<?> modifyBackgroundUrl(@RequestParam("backgroundFile")MultipartFile file,@RequestParam("courseId") String courseId) {
+        logger.debug("modifyDisplayUrl: ");
+        CourseInfo courseInfo = courseService.modifyBackgroundUrl(file,courseId);
+        Map<String,Object> response = new HashMap<>();
+        response.put("course",courseInfo);
         return ResponseEntity.ok(response);
     }
 }
