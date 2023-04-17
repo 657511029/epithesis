@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Entity.CourseInfo;
 import com.example.demo.Entity.CourseTeacher;
 import com.example.demo.Entity.Experiment;
 import com.example.demo.Service.CourseTeacherService;
@@ -31,6 +32,14 @@ public class CourseTeacherController {
         List<Map> courseTeacherList =courseTeacherService.lookTeacherOfCourse(map);
         Map<String,Object> response = new HashMap<>();
         response.put("teacherList",courseTeacherList);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookCourseListOfTeacher",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookCourseListOfUser(@RequestBody Map<String,Object> map) {
+        logger.debug("lookCourseListOfTeacher: " + map.toString());
+        List<CourseInfo> courseStudentList =courseTeacherService.lookCourseListOfTeacher(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("courseList",courseStudentList);
         return ResponseEntity.ok(response);
     }
 }

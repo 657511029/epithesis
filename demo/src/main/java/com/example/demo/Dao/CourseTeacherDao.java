@@ -10,6 +10,10 @@ import java.util.List;
 @Component
 public interface CourseTeacherDao extends CrudRepository<CourseTeacher,Long> {
     public List<CourseTeacher> findAllByCourseId(String courseId);
+
+    public CourseTeacher findByUserId(String userId);
+
+    public List<CourseTeacher> findAllByUserId(String userId);
     @Transactional
     public void deleteAllByUserId(String userId);
 }
