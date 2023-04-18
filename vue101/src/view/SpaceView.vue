@@ -28,6 +28,7 @@
              <template slot="title"><i class="el-icon-menu"></i>课程管理</template>
              <el-menu-item-group>
                <span class="alink" @click="toCourseInfo"><el-menu-item index="2-1">已选课程</el-menu-item></span>
+               <span v-show="editShow" class="alink" @click="toCourseInfo"><el-menu-item index="2-2">管理课程</el-menu-item></span>
              </el-menu-item-group>
            </el-submenu>
          </el-menu>
@@ -65,12 +66,14 @@ export default {
         userPic: '',
         username: ''
       },
+      editShow: false,
       componentNext: 'SpaceInfo',
       activeMenu: '1-1'
     }
   },
   mounted () {
     this.username = sessionStorage.getItem('username')
+    this.editShow = (sessionStorage.getItem('authority') === 'teacher')
     this.getAvatarUrl()
   },
   updated () {

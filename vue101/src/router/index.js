@@ -10,6 +10,9 @@ import ChangePic from '../components/Space/ChangePic.vue'
 import CourseInfo from '../components/Space/CourseInfo.vue'
 import SearchView from '../view/SearchView.vue'
 import CourseView from '../view/CourseView.vue'
+import AddCourseView from '../view/AddCourseView.vue'
+import EditCourseView from '../view/EditCourseView.vue'
+import EditCourseInfo from '../components/Space/EditCourseInfo.vue'
 Vue.use(Router)
 
 const originalPush = Router.prototype.push
@@ -76,6 +79,11 @@ let router = new Router({
           path: '/CourseInfo',
           name: 'CourseInfo',
           component: CourseInfo
+        },
+        {
+          path: '/EditCourseInfo',
+          name: 'EditCourseInfo',
+          component: EditCourseInfo
         }
       ]
     },
@@ -92,6 +100,24 @@ let router = new Router({
       path: '/CourseView',
       name: 'CourseView',
       component: CourseView,
+      meta: {
+        requireAuth: true,
+        show: true
+      }
+    },
+    {
+      path: '/AddCourseView',
+      name: 'AddCourseView',
+      component: AddCourseView,
+      meta: {
+        requireAuth: true,
+        show: true
+      }
+    },
+    {
+      path: 'EditCourseView',
+      name: 'EditCourseView',
+      component: EditCourseView,
       meta: {
         requireAuth: true,
         show: true

@@ -74,6 +74,10 @@ public class CourseService {
         courseInfo.setCourseTime(courseTime);
         courseInfo.setChooseName(chooseName);
         courseInfo.setIntroduction(introduction);
+        courseInfo.setExperimentNumber(0);
+        courseInfo.setStudentNumber(0);
+        courseInfo.setDisplayUrl("static/displayPic/1.jpg");
+        courseInfo.setBackgroundUrl("static/background/1.png");
         CourseInfo courseInfo1 = courseInfoDao.save(courseInfo);
         Long id = courseInfo1.getId();
         CourseTeacher courseTeacher = new CourseTeacher();

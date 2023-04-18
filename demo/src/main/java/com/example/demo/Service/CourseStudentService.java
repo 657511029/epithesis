@@ -43,9 +43,18 @@ public class CourseStudentService {
         String courseId = (String) map.get("courseId");
         String userId = (String) map.get("userId");
         CourseStudent courseStudent = courseStudentDao.findByCourseIdAndUserId(courseId,userId);
+
+        Optional<CourseInfo> courseInfoOptional = courseInfoDao.findById(Long.parseLong(courseId));
+        if(!courseInfoOptional.isPresent()){
+            throw new CannotBeenFoundException("course");
+        }
+
         if(courseStudent != null){
             throw new HasBeenFoundException("user in this course");
         }
+        CourseInfo courseInfo = courseInfoOptional.get();
+        courseInfo.setStudentNumber(courseInfo.getStudentNumber() + 1);
+        courseInfoDao.save(courseInfo);
         CourseStudent newCourseStudent = new CourseStudent();
         newCourseStudent.setCourseId(courseId);
         newCourseStudent.setUserId(userId);
@@ -57,9 +66,16 @@ public class CourseStudentService {
         String courseId = (String) map.get("courseId");
         String userId = (String) map.get("userId");
         CourseStudent courseStudent = courseStudentDao.findByCourseIdAndUserId(courseId,userId);
+        Optional<CourseInfo> courseInfoOptional = courseInfoDao.findById(Long.parseLong(courseId));
+        if(!courseInfoOptional.isPresent()){
+            throw new CannotBeenFoundException("course");
+        }
         if(courseStudent == null){
             throw new CannotBeenFoundException("user in this course");
         }
+        CourseInfo courseInfo = courseInfoOptional.get();
+        courseInfo.setStudentNumber(courseInfo.getStudentNumber() - 1);
+        courseInfoDao.save(courseInfo);
         courseStudentDao.delete(courseStudent);
         experimentStudentDao.deleteAllByUserIdAndCourseId(userId,courseId);
         return courseStudent;

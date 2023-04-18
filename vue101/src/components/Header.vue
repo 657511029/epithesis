@@ -52,6 +52,11 @@
                   注销
                 </span>
               </el-dropdown-item>
+              <el-dropdown-item v-show="editShow" icon='el-icon-plus'  style="width: 80px;">
+                <span href="#"  @click="toAddCourse" style="text-decoration: none; color: #505458;">
+                  新建课程
+                </span>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <!--          <a v-if="ifLogin" :class="{ active: '/SpaceView' === $route.path }" href="/SpaceView">-->
@@ -133,6 +138,7 @@ export default {
       }
     }
     return {
+      editShow: false,
       deleteVisible: false,
       modifyVisible: false,
       search: '',
@@ -154,6 +160,7 @@ export default {
     }
   },
   mounted () {
+    this.editShow = (sessionStorage.getItem('authority') === 'teacher')
     this.ifLogin = !!sessionStorage.getItem('isLogin')
     // !!sessionStorage.getItem('token')
     this.username = sessionStorage.getItem('username')
@@ -175,6 +182,9 @@ export default {
     },
     handleModifyClose: function () {
       this.modifyVisible = false
+    },
+    toAddCourse: function () {
+      this.$router.push('/AddCourseView')
     },
     submit: function () {
       this.$axios.post('http://localhost:8080/api/deleteUser', {
