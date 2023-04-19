@@ -113,6 +113,31 @@
         <el-button @click="handleEditCourseClose">取 消</el-button>
   </span>
     </el-dialog>
+    <el-dialog
+      title="添加教师"
+      width="500px"
+      :visible.sync="addTeacherVisible"
+      :before-close="handleAddTeacherClose"
+    >
+      <el-form :model="addTeacherForm"
+               :rules="addTeacherRules"
+               ref="addTeacherForm"
+               class="add-form-container"
+               autocomplete="new-password"
+               label-width="100px"
+               id="addTeacherForm"
+      >
+        <el-form-item prop="chooseName" label="教师名称:">
+          <el-select v-model="addTeacherForm.userId"  filterable placeholder="请选择需要添加的教师" clearable="">
+            <el-option v-for="user in userList" :label="user.username" :value="user.id" :key="user.id"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="submit3">提 交</el-button>
+        <el-button @click="handleAddTeacherClose">取 消</el-button>
+  </span>
+    </el-dialog>
     <section class="course-content">
       <aside class="course-content-left">
         <div class="course-content-intro">
@@ -134,8 +159,11 @@
           </div>
         </div>
         <div class="course-content-router-content" style="background-color: white">
-          <component :is = "componentNext" :parentId="courseId"></component>
+          <component :is = "componentNext" :parentId="courseId" :editIf="editIf"></component>
           <router-view/>
+        </div>
+        <div  class="course-join" style="margin-left: 20px;margin-top: 30px" @click="editCourse">
+          添加章节
         </div>
       </aside>
       <section class="course-content-right">
@@ -156,6 +184,9 @@
             </div>
           </div>
         </div>
+        <div  class="course-join" style="margin-left: 0;margin-top: 30px" @click="addTeacher">
+          添加教学团队
+        </div>
       </section>
     </section>
   </div>
@@ -172,8 +203,11 @@ export default {
   },
   data () {
     return {
+      editIf: 'true',
       editCourseVisible: false,
       deleteCourseVisible: false,
+      addTeacherVisible: false,
+      addExperimentVisible: false,
       courseId: '',
       componentNext: 'Chapter',
       course: {
@@ -193,8 +227,13 @@ export default {
         courseInstitution: [{required: true, message: '请输入课程单位', trigger: 'blur'}],
         chooseName: [{required: true, message: '请输入课程方向', trigger: 'blur'}]
       },
+      addTeacherForm: {},
+      addTeacherRules: {
+        username: [{required: true, message: '请输入用户名称名称', trigger: 'blur'}]
+      },
       teacherList: [],
-      chooseList: []
+      chooseList: [],
+      userList: []
     }
   },
   created () {
@@ -204,6 +243,7 @@ export default {
     this.getCourse()
     this.getTeacherList()
     this.getChooseList()
+    this.getUserList()
   },
   methods: {
     editCourse: function () {
@@ -212,11 +252,17 @@ export default {
     deleteCourse: function () {
       this.deleteCourseVisible = true
     },
+    addTeacher: function () {
+      this.addTeacherVisible = true
+    },
     handleEditCourseClose: function () {
       this.editCourseVisible = false
     },
     handleDeleteCourseClose: function () {
       this.deleteCourseVisible = false
+    },
+    handleAddTeacherClose: function () {
+      this.addTeacherVisible = false
     },
     uploadDisplay: function () {
       this.$refs.uploadDisplayFile.click()
@@ -247,6 +293,38 @@ export default {
             let message = error.response.data.message
             this.$message({
               message: '获取课程类型列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
+    getUserList () {
+      this.$axios.post('http://localhost:8080/api/lookUserListByAuthority', {
+        'authority': 'teacher'
+      })
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.userList = resp.data.userList
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '获取用户列表信息失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '获取用户列表信息失败! ' + message,
               type: 'warning',
               duration: 1500
             })
@@ -463,6 +541,55 @@ export default {
                 let message = error.response.data.message
                 this.$message({
                   message: '编辑课程失败 ' + message,
+                  type: 'warning',
+                  duration: 1500
+                })
+              } else {
+                console.log(error)
+                this.$message.error('发生错误！')
+              }
+            })
+        } else {
+          return false
+        }
+      })
+    },
+    submit3: function () {
+      this.addTeacherTeam()
+      // window.location.reload()
+    },
+    addTeacherTeam: function () {
+      this.$refs.addTeacherForm.validate((valid) => {
+        if (valid) {
+          // 只能接受json格式的数据
+          this.$axios.post('http://localhost:8080/api/addTeacher', {
+            'courseId': this.courseId,
+            'userId': this.addTeacherForm.userId + ''
+          })
+            .then(resp => {
+              if (resp.status === 200) {
+                console.log(resp)
+                window.location.reload()
+                this.$message({
+                  message: '添加教师成功',
+                  type: 'success',
+                  duration: 1500
+                })
+              } else {
+                let message = resp.data.message
+                this.$message({
+                  message: '添加教师失败 ' + message,
+                  type: 'warning',
+                  duration: 1500
+                })
+              }
+            })
+            .catch(error => {
+              if (error.response) {
+                console.log(error.response)
+                let message = error.response.data.message
+                this.$message({
+                  message: '添加教师失败 ' + message,
                   type: 'warning',
                   duration: 1500
                 })

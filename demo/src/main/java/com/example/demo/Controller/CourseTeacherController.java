@@ -42,4 +42,20 @@ public class CourseTeacherController {
         response.put("courseList",courseStudentList);
         return ResponseEntity.ok(response);
     }
+    @RequestMapping(value = "/api/addTeacher",method = {RequestMethod.POST})
+    public ResponseEntity<?> addTeacher(@RequestBody Map<String,Object> map) {
+        logger.debug("addTeacher: " + map.toString());
+       CourseTeacher courseTeacher =courseTeacherService.addTeacher(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("teacher",courseTeacher);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/deleteTeacher",method = {RequestMethod.POST})
+    public ResponseEntity<?> delete(@RequestBody Map<String,Object> map) {
+        logger.debug("deleteTeacher: " + map.toString());
+        CourseTeacher courseTeacher =courseTeacherService.deleteTeacher(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("teacher",courseTeacher);
+        return ResponseEntity.ok(response);
+    }
 }

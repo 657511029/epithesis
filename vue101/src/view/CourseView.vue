@@ -88,7 +88,7 @@
         </div>
       </div>
       <div class="course-content-router-content" style="background-color: white">
-        <component :is = "componentNext" :parentId="courseId"></component>
+        <component :is = "componentNext" :parentId="courseId" :editIf="editIf"></component>
         <router-view/>
       </div>
     </aside>
@@ -126,6 +126,7 @@ export default {
   },
   data () {
     return {
+      editIf: 'false',
       outVisible: false,
       lookIfJoin: '',
       courseId: '',

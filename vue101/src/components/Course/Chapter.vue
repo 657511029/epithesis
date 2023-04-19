@@ -9,7 +9,7 @@
           </span>
         </div>
       </div>
-      <div class="chapter-item-title" style="margin-left: 100px" >
+      <div v-show="edit === 'false'" class="chapter-item-title" style="margin-left: 100px" >
         <div class="chapter-item-title-container">
            <span class="chapter-item-button">
         开始训练
@@ -26,15 +26,18 @@
 <script>
 export default {
   name: 'Chapter',
-  props: ['parentId'],
+  props: ['parentId', 'editIf'],
+
   data () {
     return {
+      edit: '',
       courseId: 0,
       chapterList: []
     }
   },
   created () {
     this.courseId = this.parentId
+    this.edit = this.editIf
   },
   mounted () {
     this.getChapter()
