@@ -28,7 +28,7 @@
              <template slot="title"><i class="el-icon-menu"></i>课程管理</template>
              <el-menu-item-group>
                <span class="alink" @click="toCourseInfo"><el-menu-item index="2-1">已选课程</el-menu-item></span>
-               <span v-show="editShow" class="alink" @click="toCourseInfo"><el-menu-item index="2-2">管理课程</el-menu-item></span>
+               <span v-show="editShow" class="alink" @click="toEditCourseInfo"><el-menu-item index="2-2">管理课程</el-menu-item></span>
              </el-menu-item-group>
            </el-submenu>
          </el-menu>
@@ -52,13 +52,15 @@ import SpaceInfo from '../components/Space/SpaceInfo.vue'
 import ChangeInfo from '../components/Space/ChangeInfo.vue'
 import ChangePic from '../components/Space/ChangePic.vue'
 import CourseInfo from '../components/Space/CourseInfo.vue'
+import EditCourseInfo from '../components/Space/EditCourseInfo.vue'
 export default {
   name: 'SpaceView',
   components: {
     SpaceInfo,
     ChangeInfo,
     ChangePic,
-    CourseInfo
+    CourseInfo,
+    EditCourseInfo
   },
   data () {
     return {
@@ -91,6 +93,9 @@ export default {
     },
     toCourseInfo: function () {
       this.componentNext = 'CourseInfo'
+    },
+    toEditCourseInfo: function () {
+      this.componentNext = 'EditCourseInfo'
     },
     handleSelect (index) {
       this.activeMenu = index

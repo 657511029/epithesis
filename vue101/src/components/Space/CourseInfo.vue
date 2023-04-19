@@ -2,7 +2,7 @@
 <div class="courseInfo-wrap">
   <div class="course-list">
     <div class="course-item" v-for="(item) in courseList.slice(start,end)" :key="item.id">
-      <router-link :to="{path:'/CourseView',query:{courseId:item.courseId}}">
+      <router-link :to="{path:'/CourseView',query:{courseId:item.id}}">
         <div class="course-img">
           <img :src="item.displayUrl" alt="">
         </div>

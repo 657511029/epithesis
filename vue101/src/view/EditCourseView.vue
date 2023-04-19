@@ -41,11 +41,11 @@
           {{course.studentNumber}}
         </div>
       </div>
-      <div v-if="lookIfJoin === 'true'" class="course-join" @click="outCourse">
-        退出课程
+      <div  class="course-join" @click="outCourse">
+        编辑课程
       </div>
-      <div v-else class="course-join" @click="joinCourse">
-        加入课程
+      <div  class="course-join" @click="joinCourse">
+        删除课程
       </div>
     </div>
     <el-dialog
@@ -127,7 +127,6 @@ export default {
   data () {
     return {
       outVisible: false,
-      lookIfJoin: '加入课程',
       courseId: '',
       componentNext: 'Chapter',
       course: {
@@ -149,7 +148,6 @@ export default {
   mounted () {
     this.getCourse()
     this.getTeacherList()
-    this.getIfJoin()
   },
   methods: {
     joinCourse: function () {
@@ -234,39 +232,6 @@ export default {
           }
         })
     },
-    getIfJoin: function () {
-      this.$axios.post('http://localhost:8080/api/lookIfJoinCourse', {
-        'courseId': this.courseId,
-        'userId': sessionStorage.getItem('userId')
-      })
-        .then(resp => {
-          if (resp.status === 200) {
-            console.log(resp)
-            this.lookIfJoin = resp.data.lookIfJoin
-          } else {
-            let message = resp.data.message
-            this.$message({
-              message: '获取课程信息失败! ' + message,
-              type: 'warning',
-              duration: 1500
-            })
-          }
-        })
-        .catch(error => {
-          if (error.response) {
-            console.log(error.response)
-            let message = error.response.data.message
-            this.$message({
-              message: '获取课程信息失败! ' + message,
-              type: 'warning',
-              duration: 1500
-            })
-          } else {
-            console.log(error)
-            this.$message.error('发生错误！')
-          }
-        })
-    },
     toChapter: function () {
       this.componentNext = 'Chapter'
     },
@@ -274,17 +239,6 @@ export default {
       this.componentNext = 'Rank'
     },
     getCourse: function () {
-      //   this.course.backgroundUrl = 'static/backgroundPic/1.png'
-      //   this.course.courseName = '大学计算机基础 —— 计算思维'
-      //   this.course.courseTime = '2023-4-8'
-      //   this.course.studentNumber = 133
-      //   this.course.experimentNumber = 45
-      //   this.course.introduction = '人要成功融入社会所必备的思维能力，是由其所处时代能够获得的工具决定的。计算机是信息社会的必备工具之一，如何有效利用计算机分析和解决问题，将与阅读、写作和算术一样，成为 21 世纪每个人的基本技能，而不仅仅属于计算机专业人员。计算机正在对人们的生活、工作，甚至思维产生深刻的影响。\n' +
-      //     '\n' +
-      //     '《大学计算机基础》是大学本科教育的第一门计算机公共基础课程，它的改革越来越受到人们的关注。课程的主要目的是从使用计算机、理解计算机系统和计算思维三个方面培养学生的计算机应用能力。2008 年开始，以“计算思维”的培养为主线开展计算科学通识教育，逐渐成为国内外计算机基础教育界的共识。\n' +
-      //     '\n' +
-      //     '基于这种认识，国防科技大学《大学计算机基础》教学团队对该课程进行了全面改革，强调计算思维的启蒙和训练。教学的指导思想是兼顾计算机基础知识和计算思维，选择 Python 作为实践语言，将信息表示与处理、计算机系统、网络、数据库、多媒体等知识既作为教学内容，又作为计算思维求解问题的研究对象并加以实践。希望通过这种问题求解的学习和实践过程，培养学生在理解计算机基础知识的同时，能有意识地将计算思维的方法和技能应用在各自专业学习中，能解决具有一定难度的实际问题。'
-      //
       this.$axios.post('http://localhost:8080/api/lookCourseInfo', {
         'courseId': this.courseId
       })

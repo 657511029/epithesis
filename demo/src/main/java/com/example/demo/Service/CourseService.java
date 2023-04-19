@@ -63,7 +63,13 @@ public class CourseService {
         return courseInfoList;
     }
 
-    public CourseInfo addCourse(String courseName,String courseTime,String courseInstitution,String introduction,String chooseName,String userId){
+    public CourseInfo addCourse(Map<String,Object> map){
+        String courseName = (String) map.get("courseName");
+        String courseInstitution = (String)map.get("courseInstitution");
+        String courseTime = (String)map.get("courseTime");
+        String chooseName = (String)map.get("chooseName");
+        String introduction = (String)map.get("introduction");
+        String userId = (String)map.get("userId");
         CourseInfo courseInfoEntity = courseInfoDao.findByCourseName(courseName);
         if(courseInfoEntity != null){
             throw new HasBeenFoundException("course");
@@ -77,7 +83,7 @@ public class CourseService {
         courseInfo.setExperimentNumber(0);
         courseInfo.setStudentNumber(0);
         courseInfo.setDisplayUrl("static/displayPic/1.jpg");
-        courseInfo.setBackgroundUrl("static/background/1.png");
+        courseInfo.setBackgroundUrl("static/backgroundPic/1.png");
         CourseInfo courseInfo1 = courseInfoDao.save(courseInfo);
         Long id = courseInfo1.getId();
         CourseTeacher courseTeacher = new CourseTeacher();
@@ -91,7 +97,8 @@ public class CourseService {
         Optional<CourseInfo> courseInfoOptional = courseInfoDao.findById(Long.parseLong(courseId));
         if(courseInfoOptional.isPresent()){
             CourseInfo courseInfo = courseInfoOptional.get();
-            courseInfo.setDisplayUrl(load("D:/Epithesis/epithesis/vue101/static/displayPic/","static/displayPic/",display));
+            String displayUrl = load("D:/Epithesis/epithesis/vue101/static/displayPic/","static/displayPic/",display);
+            courseInfo.setDisplayUrl(displayUrl);
             courseInfoDao.save(courseInfo);
             return courseInfo;
         }
@@ -103,7 +110,8 @@ public class CourseService {
         Optional<CourseInfo> courseInfoOptional = courseInfoDao.findById(Long.parseLong(courseId));
         if(courseInfoOptional.isPresent()){
             CourseInfo courseInfo = courseInfoOptional.get();
-            courseInfo.setBackgroundUrl(load("D:/Epithesis/epithesis/vue101/static/backgroundPic/","static/backgroundPic/",background));
+            String backgroundUrl = load("D:/Epithesis/epithesis/vue101/static/backgroundPic/","static/backgroundPic/",background);
+            courseInfo.setBackgroundUrl(backgroundUrl);
             courseInfoDao.save(courseInfo);
             return courseInfo;
         }
@@ -123,7 +131,13 @@ public class CourseService {
             throw new CannotBeenFoundException("course");
         }
     }
-    public CourseInfo modifyCourseInfo(String courseName,String courseTime,String courseInstitution,String introduction,String chooseName,String courseId){
+    public CourseInfo modifyCourseInfo(Map<String,Object> map){
+        String courseName = (String) map.get("courseName");
+        String courseInstitution = (String)map.get("courseInstitution");
+        String courseTime = (String)map.get("courseTime");
+        String chooseName = (String)map.get("chooseName");
+        String introduction = (String)map.get("introduction");
+        String courseId = (String)map.get("courseId");
         Optional<CourseInfo> courseInfoOptional = courseInfoDao.findById(Long.parseLong(courseId));
         if(courseInfoOptional.isPresent()){
             CourseInfo courseInfo = courseInfoOptional.get();

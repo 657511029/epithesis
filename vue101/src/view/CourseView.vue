@@ -127,7 +127,7 @@ export default {
   data () {
     return {
       outVisible: false,
-      lookIfJoin: '加入课程',
+      lookIfJoin: '',
       courseId: '',
       componentNext: 'Chapter',
       course: {

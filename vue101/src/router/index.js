@@ -115,7 +115,7 @@ let router = new Router({
       }
     },
     {
-      path: 'EditCourseView',
+      path: '/EditCourseView',
       name: 'EditCourseView',
       component: EditCourseView,
       meta: {

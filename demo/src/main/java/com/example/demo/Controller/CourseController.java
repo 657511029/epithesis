@@ -66,17 +66,17 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
     @RequestMapping(value = "/api/addCourse",method = {RequestMethod.POST})
-    public ResponseEntity<?> addCourse(@RequestParam("courseName")String courseName,@RequestParam("courseTime")String courseTime, @RequestParam("courseInstitution") String courseInstitution, @RequestParam("introduction") String introduction,@RequestParam("chooseName") String chooseName,@RequestParam("userId") String userId) {
+    public ResponseEntity<?> addCourse(@RequestBody Map<String,Object> map) {
         logger.debug("addCourse: ");
-       CourseInfo courseInfo = courseService.addCourse(courseName, courseTime, courseInstitution, introduction, chooseName, userId);
+       CourseInfo courseInfo = courseService.addCourse(map);
         Map<String,Object> response = new HashMap<>();
         response.put("course",courseInfo);
         return ResponseEntity.ok(response);
     }
     @RequestMapping(value = "/api/modifyCourse",method = {RequestMethod.POST})
-    public ResponseEntity<?> modifyCourse(@RequestParam("courseName")String courseName,@RequestParam("courseTime")String courseTime, @RequestParam("courseInstitution") String courseInstitution, @RequestParam("introduction") String introduction,@RequestParam("chooseName") String chooseName,@RequestParam("courseId") String courseId) {
+    public ResponseEntity<?> modifyCourse(@RequestBody Map<String,Object> map) {
         logger.debug("addCourse: ");
-        CourseInfo courseInfo = courseService.modifyCourseInfo(courseName, courseTime, courseInstitution, introduction, chooseName, courseId);
+        CourseInfo courseInfo = courseService.modifyCourseInfo(map);
         Map<String,Object> response = new HashMap<>();
         response.put("course",courseInfo);
         return ResponseEntity.ok(response);
@@ -92,6 +92,7 @@ public class CourseController {
     @RequestMapping(value = "/api/modifyDisplayUrl",method = {RequestMethod.POST})
     public ResponseEntity<?> modifyDisplayUrl(@RequestParam("displayFile")MultipartFile file,@RequestParam("courseId") String courseId) {
         logger.debug("modifyDisplayUrl: ");
+        System.out.println("display");
         CourseInfo courseInfo = courseService.modifyDisplayUrl(file,courseId);
         Map<String,Object> response = new HashMap<>();
         response.put("course",courseInfo);
@@ -100,6 +101,7 @@ public class CourseController {
     @RequestMapping(value = "/api/modifyBackgroundUrl",method = {RequestMethod.POST})
     public ResponseEntity<?> modifyBackgroundUrl(@RequestParam("backgroundFile")MultipartFile file,@RequestParam("courseId") String courseId) {
         logger.debug("modifyDisplayUrl: ");
+        System.out.println("background");
         CourseInfo courseInfo = courseService.modifyBackgroundUrl(file,courseId);
         Map<String,Object> response = new HashMap<>();
         response.put("course",courseInfo);
