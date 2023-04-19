@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -76,6 +77,14 @@ public class UserController {
         User user = userService.deleteUser(map);
         Map<String,Object> response = new HashMap<>();
         response.put("user",user);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookUserListByAuthority",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookUserListByAuthority(@RequestBody Map<String,Object> map) {
+        logger.debug("lookUserListByAuthority: " + map.toString());
+        List<User> userList = userService.lookUserListByAuthority(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("userList",userList);
         return ResponseEntity.ok(response);
     }
 }

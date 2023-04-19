@@ -10,4 +10,10 @@ import javax.transaction.Transactional;
 public interface ExperimentStudentDao extends CrudRepository<ExperimentStudent,Long> {
     @Transactional
     public void deleteAllByUserIdAndCourseId(String userId,String courseId);
+
+    @Transactional
+    public void deleteAllByUserId(String userId);
+
+    @Transactional
+    public void deleteAllByCourseId(String courseId);
 }

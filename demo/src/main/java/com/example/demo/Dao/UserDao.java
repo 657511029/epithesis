@@ -14,6 +14,8 @@ public interface UserDao extends CrudRepository<User,Long> {
     public List<User> findAllByEmail(String email);
 
     public List<User> findAllByUsername(String username);
+
+    public List<User> findAllByAuthority(String authority);
     public User findByUsername(String username);
     public Optional<User> findById(Long id);
 

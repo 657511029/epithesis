@@ -41,31 +41,77 @@
           {{course.studentNumber}}
         </div>
       </div>
-      <div  class="course-join" @click="outCourse">
+      <div  class="course-join" @click="editCourse">
         编辑课程
       </div>
-      <div  class="course-join" @click="joinCourse">
+      <div  class="course-join" @click="deleteCourse">
         删除课程
       </div>
     </div>
     <el-dialog
-      title="退出课程"
+      title="删除课程"
       width="400px"
-      :visible.sync="outVisible"
-      :before-close="handleOutClose"
+      :visible.sync="deleteCourseVisible"
+      :before-close="handleDeleteCourseClose"
     >
       <el-form  >
         <div class="updateInfo" style="width: 100%">
           <el-form-item  prop="message">
-            <span>退出课程之后，你在该课程中的所有数据将被清空并永不可恢复</span>
+            <span>删除课程之后，该课程中的所有数据将被清空并永不可恢复</span>
           </el-form-item>
           <div slot="footer"  class="dialog-footer" style="padding: 0 100px">
             <el-button @click="submit" >确认</el-button>
-            <el-button type="primary" @click="handleOutClose">取消</el-button>
+            <el-button type="primary" @click="handleDeleteCourseClose">取消</el-button>
 
           </div>
         </div>
       </el-form>
+    </el-dialog>
+    <el-dialog
+      title="编辑课程"
+      width="1000px"
+      :visible.sync="editCourseVisible"
+      :before-close="handleEditCourseClose"
+    >
+      <el-form :model="editCourseForm"
+               :rules="editRules"
+               ref="editCourseForm"
+               class="edit-form-container"
+               autocomplete="new-password"
+               label-width="100px"
+               id="editCourseForm"
+      >
+        <el-form-item prop="courseName" label="课程名称:">
+          <el-input type="text" placeholder="课程名称" v-model="editCourseForm.courseName" autocomplete="new-password"></el-input>
+        </el-form-item>
+        <el-form-item prop="introduction" label="课程介绍:">
+          <el-input type="text" placeholder="课程介绍(描述字数请少于255字)" v-model="editCourseForm.introduction" autocomplete="new-password"></el-input>
+        </el-form-item>
+        <el-form-item prop="courseInstitution" label="课程单位:">
+          <el-input type="text" placeholder="课程单位" v-model="editCourseForm.courseInstitution" autocomplete="new-password"></el-input>
+        </el-form-item>
+        <el-form-item prop="chooseName" label="课程方向:">
+          <el-select v-model="editCourseForm.chooseName"  filterable placeholder="请选择课程方向" clearable="">
+            <el-option v-for="choose in chooseList" :label="choose.chooseName" :value="choose.chooseName" :key="choose.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="displayUrl" label="展示图片:">
+          <el-button @click="uploadDisplay">
+            更改课程展示图
+          </el-button>
+          <input type="file"  accept="image/*" ref="uploadDisplayFile" enctype="multipart/form-data" class="hiddenInput">
+        </el-form-item>
+        <el-form-item prop="backgroundUrl" label="背景图片:">
+          <el-button @click="uploadBackground">
+            更改课程背景图
+          </el-button>
+          <input type="file" accept="image/*" ref="uploadBackgroundFile" enctype="multipart/form-data" class="hiddenInput">
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="submit2">提 交</el-button>
+        <el-button @click="handleEditCourseClose">取 消</el-button>
+  </span>
     </el-dialog>
     <section class="course-content">
       <aside class="course-content-left">
@@ -126,7 +172,8 @@ export default {
   },
   data () {
     return {
-      outVisible: false,
+      editCourseVisible: false,
+      deleteCourseVisible: false,
       courseId: '',
       componentNext: 'Chapter',
       course: {
@@ -139,7 +186,15 @@ export default {
         introduction: '',
         courseInstitution: ''
       },
-      teacherList: []
+      editCourseForm: {},
+      editRules: {
+        courseName: [{required: true, message: '请输入课程名称', trigger: 'blur'}],
+        introduction: [{required: true, message: '请输入课程介绍', trigger: 'blur'}],
+        courseInstitution: [{required: true, message: '请输入课程单位', trigger: 'blur'}],
+        chooseName: [{required: true, message: '请输入课程方向', trigger: 'blur'}]
+      },
+      teacherList: [],
+      chooseList: []
     }
   },
   created () {
@@ -148,26 +203,39 @@ export default {
   mounted () {
     this.getCourse()
     this.getTeacherList()
+    this.getChooseList()
   },
   methods: {
-    joinCourse: function () {
-      this.$axios.post('http://localhost:8080/api/joinCourse', {
-        'courseId': this.courseId,
-        'userId': sessionStorage.getItem('userId')
+    editCourse: function () {
+      this.editCourseVisible = true
+    },
+    deleteCourse: function () {
+      this.deleteCourseVisible = true
+    },
+    handleEditCourseClose: function () {
+      this.editCourseVisible = false
+    },
+    handleDeleteCourseClose: function () {
+      this.deleteCourseVisible = false
+    },
+    uploadDisplay: function () {
+      this.$refs.uploadDisplayFile.click()
+    },
+    uploadBackground: function () {
+      this.$refs.uploadBackgroundFile.click()
+    },
+    getChooseList () {
+      this.$axios.post('http://localhost:8080/api/lookChooseList', {
+        // 'message': this.content
       })
         .then(resp => {
           if (resp.status === 200) {
             console.log(resp)
-            this.$message({
-              message: '加入课程成功 ',
-              type: 'success',
-              duration: 1500
-            })
-            window.location.reload()
+            this.chooseList = resp.data.chooseList
           } else {
             let message = resp.data.message
             this.$message({
-              message: '加入课程失败! ' + message,
+              message: '获取课程类型列表信息失败! ' + message,
               type: 'warning',
               duration: 1500
             })
@@ -178,7 +246,7 @@ export default {
             console.log(error.response)
             let message = error.response.data.message
             this.$message({
-              message: '加入课程失败! ' + message,
+              message: '获取课程类型列表信息失败! ' + message,
               type: 'warning',
               duration: 1500
             })
@@ -188,30 +256,23 @@ export default {
           }
         })
     },
-    outCourse: function () {
-      this.outVisible = true
-    },
-    handleOutClose: function () {
-      this.outVisible = false
-    },
     submit: function () {
-      this.$axios.post('http://localhost:8080/api/outCourse', {
-        'courseId': this.courseId,
-        'userId': sessionStorage.getItem('userId')
+      this.$axios.post('http://localhost:8080/api/deleteCourse', {
+        'courseId': this.courseId
       })
         .then(resp => {
           if (resp.status === 200) {
             console.log(resp)
             this.$message({
-              message: '退出课程成功 ',
+              message: '删除课程成功 ',
               type: 'success',
               duration: 1500
             })
-            window.location.reload()
+            this.$router.push('/')
           } else {
             let message = resp.data.message
             this.$message({
-              message: '退出课程失败! ' + message,
+              message: '删除课程失败! ' + message,
               type: 'warning',
               duration: 1500
             })
@@ -222,7 +283,7 @@ export default {
             console.log(error.response)
             let message = error.response.data.message
             this.$message({
-              message: '退出课程失败! ' + message,
+              message: '删除课程失败! ' + message,
               type: 'warning',
               duration: 1500
             })
@@ -252,6 +313,7 @@ export default {
             this.course.experimentNumber = resp.data.course.experimentNumber
             this.course.introduction = resp.data.course.introduction
             this.course.courseInstitution = resp.data.course.courseInstitution
+            this.editCourseForm = resp.data.course
           } else {
             let message = resp.data.message
             this.$message({
@@ -354,6 +416,139 @@ export default {
             this.$message.error('发生错误！')
           }
         })
+    },
+    submit2: function () {
+      this.editCourseInfo()
+      // window.location.reload()
+    },
+    editCourseInfo: function () {
+      this.$refs.editCourseForm.validate((valid) => {
+        if (valid) {
+          // 只能接受json格式的数据
+          this.$axios.post('http://localhost:8080/api/modifyCourse', {
+            'courseName': this.editCourseForm.courseName,
+            'introduction': this.editCourseForm.introduction,
+            'chooseName': this.editCourseForm.chooseName,
+            'courseInstitution': this.editCourseForm.courseInstitution,
+            'courseId': this.courseId
+          })
+            .then(resp => {
+              if (resp.status === 200) {
+                console.log(resp)
+                if (this.$refs.uploadDisplayFile.files.length === 0 && (this.$refs.uploadBackgroundFile.files.length === 0)) {
+                  this.addVisible = false
+                  window.location.reload()
+                } else if (this.$refs.uploadDisplayFile.files.length !== 0) {
+                  this.modifyDisplay(this.courseId)
+                } else {
+                  this.modifyBackground(this.courseId)
+                }
+                this.$message({
+                  message: '编辑课程成功',
+                  type: 'success',
+                  duration: 1500
+                })
+              } else {
+                let message = resp.data.message
+                this.$message({
+                  message: '编辑课程失败 ' + message,
+                  type: 'warning',
+                  duration: 1500
+                })
+              }
+            })
+            .catch(error => {
+              if (error.response) {
+                console.log(error.response)
+                let message = error.response.data.message
+                this.$message({
+                  message: '编辑课程失败 ' + message,
+                  type: 'warning',
+                  duration: 1500
+                })
+              } else {
+                console.log(error)
+                this.$message.error('发生错误！')
+              }
+            })
+        } else {
+          return false
+        }
+      })
+    },
+    modifyDisplay: function (editCourseId) {
+      let formData = new FormData()
+      // 通过append()方法追加数据
+      formData.append('displayFile', this.$refs.uploadDisplayFile.files[0])
+      formData.append('courseId', editCourseId + '')
+      this.$axios.post('http://localhost:8080/api/modifyDisplayUrl', formData)
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            if (this.$refs.uploadBackgroundFile.files.length !== 0) {
+              this.modifyBackground(editCourseId)
+            } else {
+              this.addVisible = false
+              window.location.reload()
+            }
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '发生错误,更新展示图失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: 'error,更新展示图失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
+    },
+    modifyBackground: function (editCourseId) {
+      let formData = new FormData()
+      // 通过append()方法追加数据
+      formData.append('backgroundFile', this.$refs.uploadBackgroundFile.files[0])
+      formData.append('courseId', editCourseId + '')
+      this.$axios.post('http://localhost:8080/api/modifyBackgroundUrl', formData)
+        .then(resp => {
+          if (resp.status === 200) {
+            console.log(resp)
+            this.addVisible = false
+            window.location.reload()
+          } else {
+            let message = resp.data.message
+            this.$message({
+              message: '更新背景失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response)
+            let message = error.response.data.message
+            this.$message({
+              message: '更新背景失败! ' + message,
+              type: 'warning',
+              duration: 1500
+            })
+          } else {
+            console.log(error)
+            this.$message.error('发生错误！')
+          }
+        })
     }
   }
 }
@@ -417,7 +612,7 @@ export default {
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 18px;
-  margin-left: 100px;
+  margin-left: 50px;
 }
 .course-content{
   margin-top: 20px;
@@ -523,5 +718,8 @@ export default {
 .course-content-router-content{
   border-radius: 15px;
   margin-left: 20px;
+}
+.hiddenInput{
+  display: none;
 }
 </style>

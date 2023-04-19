@@ -1,10 +1,9 @@
 package com.example.demo.Service;
 
-import com.example.demo.Dao.CourseInfoDao;
-import com.example.demo.Dao.CourseTeacherDao;
-import com.example.demo.Dao.UserDao;
+import com.example.demo.Dao.*;
 import com.example.demo.Entity.CourseInfo;
 
+import com.example.demo.Entity.CourseStudent;
 import com.example.demo.Entity.CourseTeacher;
 import com.example.demo.Exception.CannotBeenFoundException;
 import com.example.demo.Exception.HasBeenFoundException;
@@ -31,6 +30,15 @@ public class CourseService {
 
     @Autowired
     public CourseTeacherDao courseTeacherDao;
+
+    @Autowired
+    public CourseStudentDao courseStudentDao;
+
+    @Autowired
+    public ExperimentStudentDao experimentStudentDao;
+
+    @Autowired
+    public ExperimentDao experimentDao;
     public CourseInfo lookCourseInfo(Map<String,Object> map){
         Long courseId = Long.parseLong((String) map.get("courseId"));
         System.out.println(courseId);
@@ -125,6 +133,16 @@ public class CourseService {
         if(courseInfoOptional.isPresent()){
             CourseInfo courseInfo = courseInfoOptional.get();
             courseInfoDao.delete(courseInfo);
+           List<CourseTeacher> courseTeacherList = courseTeacherDao.findAllByCourseId(courseId);
+           for(int i = 0;i < courseTeacherList.size();i++){
+               courseTeacherDao.delete(courseTeacherList.get(i));
+           }
+           List<CourseStudent> courseStudentList = courseStudentDao.findAllByCourseId(courseId);
+           for(int i = 0;i < courseStudentList.size();i++){
+               courseStudentDao.delete(courseStudentList.get(i));
+           }
+           experimentDao.deleteAllByCourseId(courseId);
+           experimentStudentDao.deleteAllByCourseId(courseId);
             return courseInfo;
         }
         else {
@@ -134,7 +152,6 @@ public class CourseService {
     public CourseInfo modifyCourseInfo(Map<String,Object> map){
         String courseName = (String) map.get("courseName");
         String courseInstitution = (String)map.get("courseInstitution");
-        String courseTime = (String)map.get("courseTime");
         String chooseName = (String)map.get("chooseName");
         String introduction = (String)map.get("introduction");
         String courseId = (String)map.get("courseId");
@@ -143,7 +160,6 @@ public class CourseService {
             CourseInfo courseInfo = courseInfoOptional.get();
             courseInfo.setCourseInstitution(courseInstitution);
             courseInfo.setCourseName(courseName);
-            courseInfo.setCourseTime(courseTime);
             courseInfo.setChooseName(chooseName);
             courseInfo.setIntroduction(introduction);
            courseInfoDao.save(courseInfo);

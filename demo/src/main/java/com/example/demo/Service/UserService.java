@@ -2,6 +2,7 @@ package com.example.demo.Service;
 
 import com.example.demo.Dao.CourseStudentDao;
 import com.example.demo.Dao.CourseTeacherDao;
+import com.example.demo.Dao.ExperimentStudentDao;
 import com.example.demo.Dao.UserDao;
 import com.example.demo.Entity.User;
 import com.example.demo.Exception.CannotBeenFoundException;
@@ -32,6 +33,9 @@ public class UserService {
 
     @Autowired
     public CourseStudentDao courseStudentDao;
+
+    @Autowired
+    public ExperimentStudentDao experimentStudentDao;
     public User register(Map<String,Object> map) {
         //获取信息
 //        String phoneNumber = (String)map.get("phoneNumber");
@@ -125,6 +129,12 @@ public class UserService {
             throw new CannotBeenFoundException("user");
         }
     }
+
+    public List<User> lookUserListByAuthority(Map<String,Object> map){
+        String authority = (String) map.get("authority");
+        List<User> users = userDao.findAllByAuthority(authority);
+        return users;
+    }
     public User modifyUserAvatar(MultipartFile file,String idStr) throws Exception {
 
         Long id = Long.parseLong(idStr);
@@ -200,6 +210,7 @@ public class UserService {
             userDao.delete(user);
             courseTeacherDao.deleteAllByUserId((String) map.get("userId"));
             courseStudentDao.deleteAllByUserId((String) map.get("userId"));
+            experimentStudentDao.deleteAllByUserId((String) map.get("userId"));
             return user;
         } else {
             throw new CannotBeenFoundException("user");
