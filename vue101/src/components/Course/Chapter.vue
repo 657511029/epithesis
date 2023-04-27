@@ -10,7 +10,7 @@
         </div>
       </div>
       <div v-show="edit === 'false'" class="chapter-item-title" style="margin-left: 100px" >
-        <div class="chapter-item-title-container">
+        <div class="chapter-item-title-container" @click="toExperiment(item.id)">
            <span class="chapter-item-button">
         开始训练
       </span>
@@ -120,6 +120,9 @@ export default {
             this.$message.error('发生错误！')
           }
         })
+    },
+    toExperiment: function (experimentId) {
+      this.$router.push({path: '/ExperimentView', query: {experimentId: experimentId}})
     }
   }
 }

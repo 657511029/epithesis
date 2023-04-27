@@ -1,5 +1,4 @@
 package com.example.demo.Controller;
-
 import com.example.demo.Entity.Experiment;
 import com.example.demo.Entity.User;
 import com.example.demo.Service.ExperimentService;
@@ -31,6 +30,14 @@ public class ExperimentController {
         List<Experiment> experimentList = experimentService.lookExperimentOfCourse(map);
         Map<String,Object> response = new HashMap<>();
         response.put("experimentList",experimentList);
+        return ResponseEntity.ok(response);
+    }
+    @RequestMapping(value = "/api/lookExperiment",method = {RequestMethod.POST})
+    public ResponseEntity<?> lookExperiment(@RequestBody Map<String,Object> map) {
+        logger.debug("lookExperiment: " + map.toString());
+        Experiment experiment = experimentService.lookExperiment(map);
+        Map<String,Object> response = new HashMap<>();
+        response.put("experiment",experiment);
         return ResponseEntity.ok(response);
     }
 }

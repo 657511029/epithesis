@@ -15,6 +15,12 @@ public class Experiment {
 
     private String experimentName;
 
+    private String description;
+
+    private String example;
+
+    private String answer;
+
     public Long getId() {
         return id;
     }
@@ -37,5 +43,29 @@ public class Experiment {
 
     public void setExperimentName(String experimentName) {
         this.experimentName = experimentName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getExample() {
+        return example;
+    }
+
+    public void setExample(String example) {
+        this.example = example;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

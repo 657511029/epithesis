@@ -3,10 +3,13 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import VueCodeMirror from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/lib/codemirror.js'
 import App from './App'
 import router from './router'
 Vue.use(ElementUI)
-
+Vue.use(VueCodeMirror)
 let axios = require('axios')
 // Axios挂载到prototype，全局可以使用this.$axios访问
 Vue.prototype.$axios = axios

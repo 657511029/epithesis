@@ -22,4 +22,16 @@ public class ExperimentService {
        List<Experiment> experimentList = experimentDao.findAllByCourseId(courseId);
         return experimentList;
     }
+
+    public Experiment lookExperiment(Map<String,Object> map){
+        String experimentId = (String) map.get("experimentId");
+        Optional<Experiment> experimentOptional = experimentDao.findById(Long.parseLong(experimentId));
+        if(experimentOptional.isPresent()){
+            Experiment experiment = experimentOptional.get();
+            return experiment;
+        }
+        else {
+            throw new CannotBeenFoundException("experiment");
+        }
+    }
 }

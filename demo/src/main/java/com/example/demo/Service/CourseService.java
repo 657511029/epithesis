@@ -90,6 +90,7 @@ public class CourseService {
         courseInfo.setIntroduction(introduction);
         courseInfo.setExperimentNumber(0);
         courseInfo.setStudentNumber(0);
+        courseInfo.setCreatorId(userId);
         courseInfo.setDisplayUrl("static/displayPic/1.jpg");
         courseInfo.setBackgroundUrl("static/backgroundPic/1.png");
         CourseInfo courseInfo1 = courseInfoDao.save(courseInfo);

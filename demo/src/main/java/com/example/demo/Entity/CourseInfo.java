@@ -26,6 +26,8 @@ public class CourseInfo {
 
     private String courseInstitution;
 
+    private String creatorId;
+
     private String chooseName;
 
     public Long getId() {
@@ -107,5 +109,13 @@ public class CourseInfo {
 
     public void setChooseName(String chooseName) {
         this.chooseName = chooseName;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 }

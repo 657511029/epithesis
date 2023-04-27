@@ -127,7 +127,7 @@
                label-width="100px"
                id="addTeacherForm"
       >
-        <el-form-item prop="chooseName" label="教师名称:">
+        <el-form-item prop="userId" label="教师名称:">
           <el-select v-model="addTeacherForm.userId"  filterable placeholder="请选择需要添加的教师" clearable="">
             <el-option v-for="user in userList" :label="user.username" :value="user.id" :key="user.id"></el-option>
           </el-select>
@@ -136,6 +136,31 @@
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="submit3">提 交</el-button>
         <el-button @click="handleAddTeacherClose">取 消</el-button>
+  </span>
+    </el-dialog>
+    <el-dialog
+      title="删除教师"
+      width="500px"
+      :visible.sync="deleteTeacherVisible"
+      :before-close="handleDeleteTeacherClose"
+    >
+      <el-form :model="deleteTeacherForm"
+               :rules="deleteTeacherRules"
+               ref="deleteTeacherForm"
+               class="delete-form-container"
+               autocomplete="new-password"
+               label-width="100px"
+               id="deleteTeacherForm"
+      >
+        <el-form-item prop="userId" label="教师名称:">
+          <el-select v-model="deleteTeacherForm.userId"  filterable placeholder="请选择需要删除的教师" clearable="">
+            <el-option v-for="user in teacherList" :label="user.username" :value="user.userId" :key="user.userId"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="submit4">提 交</el-button>
+        <el-button @click="handleDeleteTeacherClose">取 消</el-button>
   </span>
     </el-dialog>
     <section class="course-content">
@@ -187,6 +212,9 @@
         <div  class="course-join" style="margin-left: 0;margin-top: 30px" @click="addTeacher">
           添加教学团队
         </div>
+        <div  class="course-join" style="margin-left: 0;margin-top: 30px" @click="deleteTeacher">
+          删除教学团队
+        </div>
       </section>
     </section>
   </div>
@@ -207,6 +235,7 @@ export default {
       editCourseVisible: false,
       deleteCourseVisible: false,
       addTeacherVisible: false,
+      deleteTeacherVisible: false,
       addExperimentVisible: false,
       courseId: '',
       componentNext: 'Chapter',
@@ -229,7 +258,11 @@ export default {
       },
       addTeacherForm: {},
       addTeacherRules: {
-        username: [{required: true, message: '请输入用户名称名称', trigger: 'blur'}]
+        userId: [{required: true, message: '请输入用户名称名称', trigger: 'blur'}]
+      },
+      deleteTeacherForm: {},
+      deleteTeacherRules: {
+        userId: [{required: true, message: '请输入用户名称名称', trigger: 'blur'}]
       },
       teacherList: [],
       chooseList: [],
@@ -255,6 +288,9 @@ export default {
     addTeacher: function () {
       this.addTeacherVisible = true
     },
+    deleteTeacher: function () {
+      this.deleteTeacherVisible = true
+    },
     handleEditCourseClose: function () {
       this.editCourseVisible = false
     },
@@ -263,6 +299,9 @@ export default {
     },
     handleAddTeacherClose: function () {
       this.addTeacherVisible = false
+    },
+    handleDeleteTeacherClose: function () {
+      this.deleteTeacherVisible = false
     },
     uploadDisplay: function () {
       this.$refs.uploadDisplayFile.click()
@@ -590,6 +629,55 @@ export default {
                 let message = error.response.data.message
                 this.$message({
                   message: '添加教师失败 ' + message,
+                  type: 'warning',
+                  duration: 1500
+                })
+              } else {
+                console.log(error)
+                this.$message.error('发生错误！')
+              }
+            })
+        } else {
+          return false
+        }
+      })
+    },
+    submit4: function () {
+      this.deleteTeacherTeam()
+      // window.location.reload()
+    },
+    deleteTeacherTeam: function () {
+      this.$refs.deleteTeacherForm.validate((valid) => {
+        if (valid) {
+          // 只能接受json格式的数据
+          this.$axios.post('http://localhost:8080/api/deleteTeacher', {
+            'courseId': this.courseId,
+            'userId': this.addTeacherForm.userId + ''
+          })
+            .then(resp => {
+              if (resp.status === 200) {
+                console.log(resp)
+                window.location.reload()
+                this.$message({
+                  message: '删除教师成功',
+                  type: 'success',
+                  duration: 1500
+                })
+              } else {
+                let message = resp.data.message
+                this.$message({
+                  message: '删除教师失败 ' + message,
+                  type: 'warning',
+                  duration: 1500
+                })
+              }
+            })
+            .catch(error => {
+              if (error.response) {
+                console.log(error.response)
+                let message = error.response.data.message
+                this.$message({
+                  message: '删除教师失败 ' + message,
                   type: 'warning',
                   duration: 1500
                 })

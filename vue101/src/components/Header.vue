@@ -6,7 +6,7 @@
       </div>
       <div class="header-search">
         <el-form class="search-container">
-          <el-input class="search-container-input" type="text" placeholder="请输入搜索内容" v-model="search" auto-complete="off" :prefix-icon="Search"></el-input>
+          <el-input class="search-container-input" type="text" placeholder="请输入搜索内容" v-model="search" auto-complete="off" ></el-input>
           <el-button class="search-container-button" type="primary" @click="doSearch">搜索</el-button>
         </el-form>
       </div>
@@ -18,11 +18,11 @@
               </span>
           </a>
         </li>
-        <li>
-          <a :class="{ active: '/DiscussView' === $route.path }">
-            讨论区
-          </a>
-        </li>
+<!--        <li>-->
+<!--          <a :class="{ active: '/DiscussView' === $route.path }">-->
+<!--            讨论区-->
+<!--          </a>-->
+<!--        </li>-->
         <li>
           <a :class="{ active: '/ConcernView' === $route.path }">
             关于
@@ -129,7 +129,8 @@
           <el-input type="text" placeholder="课程名称" v-model="addCourseForm.courseName" autocomplete="new-password"></el-input>
         </el-form-item>
         <el-form-item prop="introduction" label="课程介绍:">
-          <el-input type="text" placeholder="课程介绍(描述字数请少于255字)" v-model="addCourseForm.introduction" autocomplete="new-password"></el-input>
+          <el-input type="textarea" :rows="5" placeholder="课程介绍(描述字数请少于255字)" v-model="addCourseForm.introduction" autocomplete="new-password"></el-input>
+<!--          <textArea placeholder="课程介绍(描述字数请少于255字)" v-model="addCourseForm.introduction" autocomplete="new-password"></textArea>-->
         </el-form-item>
         <el-form-item prop="courseInstitution" label="课程单位:">
           <el-input type="text" placeholder="课程单位" v-model="addCourseForm.courseInstitution" autocomplete="new-password"></el-input>
@@ -189,6 +190,13 @@ export default {
         callback()
       }
     }
+    const introCheck = async (rule, value, callback) => {
+      if (value.length > 255) {
+        return callback(new Error('课程介绍最长不能超过255位！'))
+      } else {
+        callback()
+      }
+    }
     return {
       addCourseId: 0,
       editShow: false,
@@ -221,7 +229,8 @@ export default {
       },
       addRules: {
         courseName: [{required: true, message: '请输入课程名称', trigger: 'blur'}],
-        introduction: [{required: true, message: '请输入课程介绍', trigger: 'blur'}],
+        introduction: [{required: true, message: '请输入课程介绍', trigger: 'blur'},
+          {validator: introCheck(), trigger: 'blur'}],
         courseInstitution: [{required: true, message: '请输入课程单位', trigger: 'blur'}],
         chooseName: [{required: true, message: '请输入课程方向', trigger: 'blur'}]
       },
@@ -585,6 +594,7 @@ export default {
 .header-list{
   margin: 0;
   padding: 0;
+  margin-left: 70px;
 }
 .header-list li{
   display: inline-block;

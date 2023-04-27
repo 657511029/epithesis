@@ -13,6 +13,7 @@ import CourseView from '../view/CourseView.vue'
 import AddCourseView from '../view/AddCourseView.vue'
 import EditCourseView from '../view/EditCourseView.vue'
 import EditCourseInfo from '../components/Space/EditCourseInfo.vue'
+import ExperimentView from '../view/ExperimentView.vue'
 Vue.use(Router)
 
 const originalPush = Router.prototype.push
@@ -121,6 +122,15 @@ let router = new Router({
       meta: {
         requireAuth: true,
         show: true
+      }
+    },
+    {
+      path: '/ExperimentView',
+      name: 'ExperimentView',
+      component: ExperimentView,
+      meta: {
+        requireAuth: true,
+        show: false
       }
     }
   ]
