@@ -44,7 +44,7 @@
       <div  class="course-join" @click="editCourse">
         编辑课程
       </div>
-      <div  class="course-join" @click="deleteCourse">
+      <div v-show="creatorId === course.creatorId" class="course-join" @click="deleteCourse">
         删除课程
       </div>
     </div>
@@ -187,7 +187,7 @@
           <component :is = "componentNext" :parentId="courseId" :editIf="editIf"></component>
           <router-view/>
         </div>
-        <div  class="course-join" style="margin-left: 20px;margin-top: 30px" @click="editCourse">
+        <div v-show="creatorId === course.creatorId" class="course-join" style="margin-left: 20px;margin-top: 30px" @click="editCourse">
           添加章节
         </div>
       </aside>
@@ -209,10 +209,10 @@
             </div>
           </div>
         </div>
-        <div  class="course-join" style="margin-left: 0;margin-top: 30px" @click="addTeacher">
+        <div v-show="creatorId === course.creatorId" class="course-join" style="margin-left: 0;margin-top: 30px" @click="addTeacher">
           添加教学团队
         </div>
-        <div  class="course-join" style="margin-left: 0;margin-top: 30px" @click="deleteTeacher">
+        <div v-show="creatorId === course.creatorId" class="course-join" style="margin-left: 0;margin-top: 30px" @click="deleteTeacher">
           删除教学团队
         </div>
       </section>
@@ -231,6 +231,7 @@ export default {
   },
   data () {
     return {
+      creatorId: '',
       editIf: 'true',
       editCourseVisible: false,
       deleteCourseVisible: false,
@@ -240,6 +241,7 @@ export default {
       courseId: '',
       componentNext: 'Chapter',
       course: {
+        creatorId: '',
         backgroundUrl: '',
         courseName: '',
         courseTime: '',
@@ -273,10 +275,13 @@ export default {
     this.courseId = this.$route.query.courseId
   },
   mounted () {
+    this.creatorId = sessionStorage.getItem('userId')
     this.getCourse()
     this.getTeacherList()
     this.getChooseList()
     this.getUserList()
+    console.log(this.creatorId)
+    console.log(this.course.creatorId)
   },
   methods: {
     editCourse: function () {
@@ -430,6 +435,7 @@ export default {
             this.course.experimentNumber = resp.data.course.experimentNumber
             this.course.introduction = resp.data.course.introduction
             this.course.courseInstitution = resp.data.course.courseInstitution
+            this.course.creatorId = resp.data.course.creatorId
             this.editCourseForm = resp.data.course
           } else {
             let message = resp.data.message

@@ -38,7 +38,7 @@
      <div class="body-right">
       <div class="code-container">
         <div class="body-right-title">
-          代码文件
+          代码文件(java)
         </div>
         <div class="code">
           <codemirror
@@ -503,6 +503,7 @@ export default {
   padding-top: 20px;
   padding-left: 40px;
   font-size: 14px;
+  overflow: auto;
 }
 .code-result-header span{
   font-size: 12px;
